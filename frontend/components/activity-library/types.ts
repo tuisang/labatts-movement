@@ -12,6 +12,10 @@ export interface VideoCardData {
   views: string;
 }
 
+// NOTE: thumbnailUrl values below are free Unsplash stock photos (not Unsplash+/premium),
+// reused from elsewhere in this project since they're already verified to load correctly.
+// Swap these for real Labatts Movement footage via Cloudinary as soon as it's available —
+// same open item as the Rarewoods Crew photography swap.
 export const videoLibraryData: VideoCardData[] = [
   {
     id: "explosive-vertical-power",
@@ -19,7 +23,7 @@ export const videoLibraryData: VideoCardData[] = [
     description:
       "Master the mechanics of high-impact vertical jumps with specialized plyometric drills.",
     thumbnailUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBDA7TkZYFW36MLa8t75pCAm0ZErLzD47sgAxP3k-tGL6mukrHFDcfOBm6bf9ae-Nv0DBK71KVerXF5RboCuuJJw3zHeNsnTkiOZMo05OD7m6eltdEVABHs0QfMbgYNRx9SX494vt2kKHZZM8lfsrOLRQgoRaQtdN-UI5aE2_bu7J2AT8-m7oxDEfdIpkGWpHkF9Lp04_AyOOHpJk7PJusnYCXuZZjMFcsc0pRAY5DoH2UEdwkFW3AW",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800",
     duration: "12:45",
     difficulty: "Intermediate",
     ageGroup: "Ages 12+",
@@ -32,7 +36,7 @@ export const videoLibraryData: VideoCardData[] = [
     description:
       "Engaging school-ready activities focused on fundamental movement patterns.",
     thumbnailUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBDA7TkZYFW36MLa8t75pCAm0ZErLzD47sgAxP3k-tGL6mukrHFDcfOBm6bf9ae-Nv0DBK71KVerXF5RboCuuJJw3zHeNsnTkiOZMo05OD7m6eltdEVABHs0QfMbgYNRx9SX494vt2kKHZZM8lfsrOLRQgoRaQtdN-UI5aE2_bu7J2AT8-m7oxDEfdIpkGWpHkF9Lp04_AyOOHpJk7PJusnYCXuZZjMFcsc0pRAY5DoH2UEdwkFW3AW",
+      "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=800",
     duration: "08:20",
     difficulty: "Beginner",
     ageGroup: "Ages 5-8",
@@ -45,7 +49,7 @@ export const videoLibraryData: VideoCardData[] = [
     description:
       "High-velocity lateral movement drills and reaction-based agility training.",
     thumbnailUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBDA7TkZYFW36MLa8t75pCAm0ZErLzD47sgAxP3k-tGL6mukrHFDcfOBm6bf9ae-Nv0DBK71KVerXF5RboCuuJJw3zHeNsnTkiOZMo05OD7m6eltdEVABHs0QfMbgYNRx9SX494vt2kKHZZM8lfsrOLRQgoRaQtdN-UI5aE2_bu7J2AT8-m7oxDEfdIpkGWpHkF9Lp04_AyOOHpJk7PJusnYCXuZZjMFcsc0pRAY5DoH2UEdwkFW3AW",
+      "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=800",
     duration: "15:10",
     difficulty: "Advanced",
     ageGroup: "Ages 16+",
@@ -58,7 +62,7 @@ export const videoLibraryData: VideoCardData[] = [
     description:
       "Focus on ball manipulation, body positioning, and micro-touches to beat defenders.",
     thumbnailUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBDA7TkZYFW36MLa8t75pCAm0ZErLzD47sgAxP3k-tGL6mukrHFDcfOBm6bf9ae-Nv0DBK71KVerXF5RboCuuJJw3zHeNsnTkiOZMo05OD7m6eltdEVABHs0QfMbgYNRx9SX494vt2kKHZZM8lfsrOLRQgoRaQtdN-UI5aE2_bu7J2AT8-m7oxDEfdIpkGWpHkF9Lp04_AyOOHpJk7PJusnYCXuZZjMFcsc0pRAY5DoH2UEdwkFW3AW",
+      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800",
     duration: "10:05",
     difficulty: "Intermediate",
     ageGroup: "Ages 10+",
@@ -71,7 +75,7 @@ export const videoLibraryData: VideoCardData[] = [
     description:
       "Short, high-engagement movement breaks designed to boost focus and classroom energy.",
     thumbnailUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBDA7TkZYFW36MLa8t75pCAm0ZErLzD47sgAxP3k-tGL6mukrHFDcfOBm6bf9ae-Nv0DBK71KVerXF5RboCuuJJw3zHeNsnTkiOZMo05OD7m6eltdEVABHs0QfMbgYNRx9SX494vt2kKHZZM8lfsrOLRQgoRaQtdN-UI5aE2_bu7J2AT8-m7oxDEfdIpkGWpHkF9Lp04_AyOOHpJk7PJusnYCXuZZjMFcsc0pRAY5DoH2UEdwkFW3AW",
+      "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=800",
     duration: "06:45",
     difficulty: "Beginner",
     ageGroup: "Ages 4-7",
@@ -84,7 +88,7 @@ export const videoLibraryData: VideoCardData[] = [
     description:
       "Breakdown of elite acceleration techniques, from block clearance to peak velocity transitions.",
     thumbnailUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBDA7TkZYFW36MLa8t75pCAm0ZErLzD47sgAxP3k-tGL6mukrHFDcfOBm6bf9ae-Nv0DBK71KVerXF5RboCuuJJw3zHeNsnTkiOZMo05OD7m6eltdEVABHs0QfMbgYNRx9SX494vt2kKHZZM8lfsrOLRQgoRaQtdN-UI5aE2_bu7J2AT8-m7oxDEfdIpkGWpHkF9Lp04_AyOOHpJk7PJusnYCXuZZjMFcsc0pRAY5DoH2UEdwkFW3AW",
+      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800",
     duration: "18:30",
     difficulty: "Advanced",
     ageGroup: "Ages 16+",
