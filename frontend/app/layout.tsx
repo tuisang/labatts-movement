@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Libre_Franklin } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Navbar from "@/components/Navbar";
-import ArtisanChatbot from "@/components/ArtisanChatbot";
-import FloatingActions from "@/components/FloatingActions";
 import { CartProvider } from "@/lib/CartContext";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
@@ -136,13 +133,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <meta name="msapplication-TileColor" content="#994700" />
           <link rel="canonical" href="https://rarewoodscrew.tuistech.co.ke" />
         </head>
-        <body className={`${libreFranklin.variable} bg-background text-on-surface`}>          <CartProvider>
-            <Navbar />
+        <body className={`${libreFranklin.variable} bg-background text-on-surface`}>          
+        <CartProvider>
             <Suspense fallback={<Loading />}>
               {children}
-            </Suspense>
-            <ArtisanChatbot />
-            <FloatingActions />
+            </Suspense>          
           </CartProvider>
         </body>
       </html>
