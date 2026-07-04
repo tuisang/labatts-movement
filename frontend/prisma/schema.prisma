@@ -111,3 +111,29 @@ model Subscriber {
 
   @@map("subscribers")
 }
+
+model Athlete {
+  id            String          @id @default(cuid())
+  parentClerkId String
+  name          String
+  ageGroup      String
+  sport         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  progress      ProgressEntry[]
+
+  @@map("athletes")
+}
+
+model ProgressEntry {
+  id         String   @id @default(cuid())
+  athleteId  String
+  metric     String
+  value      String
+  notes      String?
+  recordedAt DateTime @default(now())
+  athlete    Athlete  @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+
+  @@map("progress_entries")
+}
+
