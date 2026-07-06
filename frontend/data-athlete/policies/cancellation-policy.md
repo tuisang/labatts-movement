@@ -1,0 +1,1 @@
+If an athlete needs to reschedule, contact the coach as early as possible. The KSh 1,000 M-Pesa confirmation fee is generally non-refundable if cancelled with less than 24 hours' notice, but can typically be applied toward a rescheduled session.

@@ -62,9 +62,12 @@ export default function TopNavBar() {
               className="bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant w-48"
             />
           </div>
-          <button className="bg-primary text-on-primary px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors">
+          <Link
+            href="/book-session"
+            className="bg-primary text-on-primary px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors"
+          >
             Book Now
-          </button>
+          </Link>
         </div>
       </div>
     </header>

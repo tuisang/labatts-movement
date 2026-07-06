@@ -1,0 +1,2 @@
+The KSh 1,000 M-Pesa fee at booking is a confirmation/reservation fee, separate from the cost of the session itself. The session fee (KSh 1,000–2,500 depending on the program) is paid separately at the session unless otherwise arranged.
+Institutional/school partnerships are handled differently — no fee applies, and terms are agreed via a signed partnership contract instead of individual session payments.

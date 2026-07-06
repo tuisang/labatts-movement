@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import FilterSidebar from "@/components/activity-library/FilterSidebar";
+import FilterSidebar, { ActiveFilters, emptyFilters } from "@/components/activity-library/FilterSidebar";
 
 interface FeaturedActivity {
   id: string;
@@ -40,16 +40,12 @@ const featuredActivities: FeaturedActivity[] = [
 ];
 
 export default function FeaturedActivities() {
-  const [activeFilter, setActiveFilter] = useState("Age");
+  const [filters, setFilters] = useState<ActiveFilters>(emptyFilters);
 
   return (
     <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16">
       <div className="flex flex-col md:flex-row gap-10">
-        <FilterSidebar
-          active={activeFilter}
-          onSelect={setActiveFilter}
-          onClearAll={() => setActiveFilter("Age")}
-        />
+        <FilterSidebar filters={filters} onChange={setFilters} />
 
         <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {featuredActivities.map((activity) => (

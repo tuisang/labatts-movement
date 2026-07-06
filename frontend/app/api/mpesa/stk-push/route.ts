@@ -1,15 +1,19 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 const SHORTCODE = process.env.MPESA_SHORTCODE ?? "174379";
 const PASSKEY = process.env.MPESA_PASSKEY ?? "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 const CONSUMER_KEY = process.env.MPESA_CONSUMER_KEY!;
 const CONSUMER_SECRET = process.env.MPESA_CONSUMER_SECRET!;
-const CALLBACK_URL = process.env.MPESA_CALLBACK_URL ?? "https://rarewoodscrew.tuistech.co.ke/api/mpesa/callback";
+const CALLBACK_URL = process.env.MPESA_CALLBACK_URL ?? "https://labattsmovement.tuistech.co.ke/api/mpesa/callback";
 const IS_PRODUCTION = process.env.MPESA_ENVIRONMENT === "production";
 const MPESA_BASE = IS_PRODUCTION
   ? "https://api.safaricom.co.ke"
   : "https://sandbox.safaricom.co.ke";
+
+// Booking confirmation fee — same amount in sandbox and production so the
+// actual fee logic gets tested for real, not skipped in dev.
+const BOOKING_CONFIRMATION_FEE = 1000;
 
 async function getAccessToken(): Promise<string> {
   const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString("base64");
@@ -26,6 +30,7 @@ async function getAccessToken(): Promise<string> {
     throw new Error(`Token parse failed: ${text}`);
   }
 }
+
 export async function POST(req: NextRequest) {
   try {
     const { phone, bookingId } = await req.json();
@@ -39,20 +44,12 @@ export async function POST(req: NextRequest) {
     const timestamp = new Date().toISOString().replace(/[-T:.Z]/g, "").slice(0, 14);
     const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString("base64");
 
-    // Get booking to get amount
     const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
-    const amount = IS_PRODUCTION ? 2000 : 1; // KES 2000 consultation 
-    
-    console.log("STK request body:", JSON.stringify({
-  BusinessShortCode: SHORTCODE,
-  Password: password,
-  Timestamp: timestamp,
-  Amount: amount,
-  PartyA: formattedPhone,
-  PartyB: SHORTCODE,
-  PhoneNumber: formattedPhone,
-  CallBackURL: CALLBACK_URL,
-}));
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found." }, { status: 404 });
+    }
+
+    const amount = BOOKING_CONFIRMATION_FEE;
 
     const stkRes = await fetch(`${MPESA_BASE}/mpesa/stkpush/v1/processrequest`, {
       method: "POST",
@@ -67,19 +64,19 @@ export async function POST(req: NextRequest) {
         PartyB: SHORTCODE,
         PhoneNumber: formattedPhone,
         CallBackURL: CALLBACK_URL,
-        AccountReference: "RarewoodsCrew",
-        TransactionDesc: "Consultation Fee",
+        AccountReference: "LabattsMovement",
+        TransactionDesc: "Booking Confirmation Fee",
       }),
     });
 
     const stkData = await stkRes.json();
 
     if (stkData.ResponseCode !== "0") {
-  return NextResponse.json(
-    { error: stkData.ResponseDescription ?? "STK push failed.", mpesaResponse: stkData },
-    { status: 400 }
-  );
-}
+      return NextResponse.json(
+        { error: stkData.ResponseDescription ?? "STK push failed.", mpesaResponse: stkData },
+        { status: 400 }
+      );
+    }
 
     await prisma.booking.update({
       where: { id: bookingId },
@@ -93,10 +90,12 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("STK push error:", error);
-    return NextResponse.json({ 
-      error: "Failed to initiate payment.",
-      details: error instanceof Error ? error.message : String(error)
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Failed to initiate payment.",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
   }
 }
-

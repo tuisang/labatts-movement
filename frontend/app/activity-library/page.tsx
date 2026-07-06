@@ -1,19 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
-import FilterSidebar from "@/components/activity-library/FilterSidebar";
+import FilterSidebar, { ActiveFilters, emptyFilters } from "@/components/activity-library/FilterSidebar";
 import VideoCard from "@/components/activity-library/VideoCard";
 import { videoLibraryData } from "@/components/activity-library/types";
 
 const categoryTabs = ["Fundamental Movement Skills", "Agility Training", "School Class Activities"];
-const totalPages = 3;
+const PAGE_SIZE = 6;
 
 export default function ActivityLibraryPage() {
-  const [activeFilter, setActiveFilter] = useState("Age");
+  const [filters, setFilters] = useState<ActiveFilters>(emptyFilters);
   const [activeTab, setActiveTab] = useState(categoryTabs[1]);
   const [page, setPage] = useState(1);
+
+  const filteredVideos = useMemo(() => {
+    return videoLibraryData.filter((video) => {
+      if (filters.ageGroup.length > 0 && !filters.ageGroup.includes(video.ageGroup)) return false;
+      if (filters.difficulty.length > 0 && !filters.difficulty.includes(video.difficulty)) return false;
+      if (filters.setting.length > 0 && !filters.setting.includes(video.setting)) return false;
+      if (
+        filters.equipment.length > 0 &&
+        !video.equipment.some((eq) => filters.equipment.includes(eq))
+      )
+        return false;
+      return true;
+    });
+  }, [filters]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredVideos.length / PAGE_SIZE));
+  const paginatedVideos = filteredVideos.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const handleFilterChange = (next: ActiveFilters) => {
+    setFilters(next);
+    setPage(1);
+  };
 
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
@@ -45,46 +67,57 @@ export default function ActivityLibraryPage() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-10">
-          <FilterSidebar
-            active={activeFilter}
-            onSelect={setActiveFilter}
-            onClearAll={() => setActiveFilter("Age")}
-          />
+          <FilterSidebar filters={filters} onChange={handleFilterChange} />
 
           <div className="flex-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videoLibraryData.map((video) => (
-                <VideoCard key={video.id} video={video} />
-              ))}
-            </div>
+            {paginatedVideos.length === 0 ? (
+              <div className="bg-surface-container-lowest rounded-xl p-10 text-center video-card-shadow">
+                <span className="material-symbols-outlined text-[40px] text-on-surface-variant mb-3 block">
+                  search_off
+                </span>
+                <p className="text-on-surface-variant">
+                  No videos match your selected filters. Try clearing some filters.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedVideos.map((video) => (
+                  <VideoCard key={video.id} video={video} />
+                ))}
+              </div>
+            )}
 
-            <div className="flex justify-center mt-16 gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors"
-              >
-                <span className="material-symbols-outlined">chevron_left</span>
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-16 gap-2">
                 <button
-                  key={n}
-                  onClick={() => setPage(n)}
-                  className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-colors ${
-                    n === page
-                      ? "bg-primary text-on-primary font-bold"
-                      : "border border-outline-variant text-on-surface-variant hover:bg-surface-container"
-                  }`}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  {n}
+                  <span className="material-symbols-outlined">chevron_left</span>
                 </button>
-              ))}
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors"
-              >
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setPage(n)}
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-colors ${
+                      n === page
+                        ? "bg-primary text-on-primary font-bold"
+                        : "border border-outline-variant text-on-surface-variant hover:bg-surface-container"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <span className="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </main>

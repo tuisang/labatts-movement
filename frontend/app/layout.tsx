@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { CartProvider } from "@/lib/CartContext";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
+import AthleteChatbot from "@/components/AthleteChatbot";
 
 const libreFranklin = Libre_Franklin({
   variable: "--font-libre-franklin",
@@ -126,6 +127,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <CartProvider>
             <Suspense fallback={<Loading />}>
               {children}
+            <AthleteChatbot />
             </Suspense>          
           </CartProvider>
         </body>

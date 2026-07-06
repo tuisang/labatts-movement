@@ -137,3 +137,23 @@ model ProgressEntry {
   @@map("progress_entries")
 }
 
+
+model InstitutionBooking {
+  id             String    @id @default(cuid())
+  schoolName     String
+  contactName    String
+  contactEmail   String
+  contactPhone   String?
+  studentCount   String?
+  program        String
+  proposedDate   String?
+  notes          String?
+  status         String    @default("pending") // pending | contract_sent | signed | cancelled
+  contractText   String?
+  signedByName   String?
+  signedAt       DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("institution_bookings")
+}

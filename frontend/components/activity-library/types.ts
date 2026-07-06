@@ -1,4 +1,5 @@
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced";
+export type Setting = "Indoor" | "Outdoor";
 
 export interface VideoCardData {
   id: string;
@@ -10,6 +11,8 @@ export interface VideoCardData {
   ageGroup: string;
   coach: string;
   views: string;
+  setting: Setting;
+  equipment: string[];
 }
 
 // NOTE: thumbnailUrl values below are free Unsplash stock photos (not Unsplash+/premium),
@@ -29,6 +32,8 @@ export const videoLibraryData: VideoCardData[] = [
     ageGroup: "Ages 12+",
     coach: "Coach Marcus",
     views: "12k Views",
+    setting: "Indoor",
+    equipment: ["Plyo Box"],
   },
   {
     id: "balance-coordination-games",
@@ -42,6 +47,8 @@ export const videoLibraryData: VideoCardData[] = [
     ageGroup: "Ages 5-8",
     coach: "Coach Sarah",
     views: "4.5k Views",
+    setting: "Indoor",
+    equipment: ["Cones"],
   },
   {
     id: "elite-agility-patterns",
@@ -55,6 +62,8 @@ export const videoLibraryData: VideoCardData[] = [
     ageGroup: "Ages 16+",
     coach: "Coach David",
     views: "22k Views",
+    setting: "Outdoor",
+    equipment: ["Agility Ladder"],
   },
   {
     id: "close-control-dribbling",
@@ -68,6 +77,8 @@ export const videoLibraryData: VideoCardData[] = [
     ageGroup: "Ages 10+",
     coach: "Coach Elena",
     views: "8.9k Views",
+    setting: "Outdoor",
+    equipment: ["Soccer Ball"],
   },
   {
     id: "active-classroom-breaks",
@@ -81,6 +92,8 @@ export const videoLibraryData: VideoCardData[] = [
     ageGroup: "Ages 4-7",
     coach: "Coach Sam",
     views: "3.1k Views",
+    setting: "Indoor",
+    equipment: ["None"],
   },
   {
     id: "sprint-mechanics-starts",
@@ -94,6 +107,8 @@ export const videoLibraryData: VideoCardData[] = [
     ageGroup: "Ages 16+",
     coach: "Coach Andre",
     views: "31k Views",
+    setting: "Outdoor",
+    equipment: ["Starting Blocks"],
   },
 ];
 

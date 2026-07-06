@@ -1,0 +1,1 @@
+Programs are grouped by age band (e.g. Ages 5-8, 10+, 12+, 16+) to match training intensity and complexity to developmental stage. Younger age groups (5-8) focus on fundamental movement and coordination rather than high-impact plyometric or sprint work, which is reserved for older, more developed athletes.
