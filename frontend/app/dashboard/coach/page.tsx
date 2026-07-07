@@ -1,9 +1,12 @@
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
-import CoachAthleteCard from "@/components/coach/CoachAthleteCard";
+import CoachAthletesGrid from "@/components/coach/CoachAthletesGrid";
 import CoachBookingsTable from "@/components/coach/CoachBookingsTable";
 import CoachInstitutionsTable from "@/components/coach/CoachInstitutionsTable";
+import CoachSessionsManager from "@/components/coach/CoachSessionsManager";
+import CoachEquipmentManager from "@/components/coach/CoachEquipmentManager";
+import SeedDefaultsButton from "@/components/coach/SeedDefaultsButton";
 import { prisma } from "@/lib/prisma";
 import { isCoach } from "@/lib/coachAuth";
 
@@ -27,7 +30,7 @@ async function CoachDashboardContent() {
     );
   }
 
-  const [athletes, bookings, institutionBookings] = await Promise.all([
+  const [athletes, bookings, institutionBookings, sessions, equipment] = await Promise.all([
     prisma.athlete.findMany({
       include: { progress: { orderBy: { recordedAt: "desc" } } },
       orderBy: { createdAt: "desc" },
@@ -38,6 +41,8 @@ async function CoachDashboardContent() {
     prisma.institutionBooking.findMany({
       orderBy: { createdAt: "desc" },
     }),
+    prisma.sessionOption.findMany({ orderBy: { createdAt: "asc" } }),
+    prisma.equipmentItem.findMany({ orderBy: { createdAt: "asc" } }),
   ]);
 
   return (
@@ -51,19 +56,7 @@ async function CoachDashboardContent() {
             No athletes added by parents yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {athletes.map((athlete) => (
-              <CoachAthleteCard
-                key={athlete.id}
-                id={athlete.id}
-                name={athlete.name}
-                ageGroup={athlete.ageGroup}
-                sport={athlete.sport}
-                parentClerkId={athlete.parentClerkId}
-                progress={athlete.progress}
-              />
-            ))}
-          </div>
+          <CoachAthletesGrid athletes={athletes} />
         )}
       </section>
 
@@ -80,6 +73,23 @@ async function CoachDashboardContent() {
         </h2>
         <CoachInstitutionsTable bookings={institutionBookings} />
       </section>
+
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-headline-md text-headline-md text-on-surface">
+            Manage Sessions ({sessions.length})
+          </h2>
+          {sessions.length === 0 && <SeedDefaultsButton />}
+        </div>
+        <CoachSessionsManager sessions={sessions} />
+      </section>
+
+      <section>
+        <h2 className="font-headline-md text-headline-md text-on-surface mb-4">
+          Manage Equipment ({equipment.length})
+        </h2>
+        <CoachEquipmentManager items={equipment} />
+      </section>
     </div>
   );
 }
@@ -94,7 +104,7 @@ export default function CoachDashboardPage() {
           Coach Dashboard
         </h1>
         <p className="text-on-surface-variant text-body-lg max-w-2xl mb-10">
-          Manage athlete progress, bookings, and institution partnerships.
+          Manage athlete progress, bookings, institution partnerships, and content.
         </p>
 
         <SignedOut>

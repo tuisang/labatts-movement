@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { updateBookingStatus } from "@/app/dashboard/coach/actions";
 
 interface BookingData {
@@ -16,9 +16,14 @@ interface BookingData {
 }
 
 const statusOptions = ["pending", "awaiting_payment", "confirmed", "completed", "cancelled"];
+const PAGE_SIZE = 10;
 
 export default function CoachBookingsTable({ bookings }: { bookings: BookingData[] }) {
   const [isPending, startTransition] = useTransition();
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(bookings.length / PAGE_SIZE));
+  const paginated = bookings.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const handleStatusChange = (bookingId: string, status: string) => {
     startTransition(() => {
@@ -41,7 +46,7 @@ export default function CoachBookingsTable({ bookings }: { bookings: BookingData
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking) => (
+            {paginated.map((booking) => (
               <tr key={booking.id} className="border-b border-outline-variant/30 last:border-0">
                 <td className="px-5 py-4">
                   <p className="font-medium text-on-surface">{booking.name}</p>
@@ -81,6 +86,28 @@ export default function CoachBookingsTable({ bookings }: { bookings: BookingData
         <p className="text-on-surface-variant text-sm italic p-8 text-center">
           No bookings yet.
         </p>
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 p-4 border-t border-outline-variant/30">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+          </button>
+          <span className="text-sm text-on-surface-variant px-2">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+          </button>
+        </div>
       )}
     </div>
   );

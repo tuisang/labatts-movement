@@ -3,11 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBooking } from "@/app/book-session/actions";
-import { sessionOptions } from "./sessionOptions";
+
+interface SessionOptionData {
+  id: string;
+  name: string;
+  duration: string;
+  price: number;
+}
 
 type Step = "form" | "awaiting-payment" | "error";
 
-export default function BookingForm() {
+export default function BookingForm({ sessions }: { sessions: SessionOptionData[] }) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("form");
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,8 +54,6 @@ export default function BookingForm() {
 
         setStep("awaiting-payment");
       } else {
-        // Cash ("Pay at Session") — no payment step needed, booking is confirmed
-        // pending in-person payment.
         router.push("/book-session/confirmed");
       }
     } catch (err) {
@@ -137,7 +141,7 @@ export default function BookingForm() {
           <option value="" disabled>
             Select a session
           </option>
-          {sessionOptions.map((option) => (
+          {sessions.map((option) => (
             <option key={option.id} value={option.name}>
               {option.name} — {option.duration}
             </option>

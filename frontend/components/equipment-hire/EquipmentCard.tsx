@@ -6,10 +6,18 @@ export default function EquipmentCard({ item }: { item: EquipmentItem }) {
   return (
     <div className="bg-surface-container-lowest rounded-xl overflow-hidden video-card-shadow flex flex-col">
       <div className="relative aspect-video">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${item.imageUrl}')` }}
-        />
+        {item.imageUrl ? (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url('${item.imageUrl}')` }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-surface-container flex items-center justify-center">
+            <span className="material-symbols-outlined text-[40px] text-on-surface-variant">
+              fitness_center
+            </span>
+          </div>
+        )}
         {!item.available && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <span className="bg-error text-on-error text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">

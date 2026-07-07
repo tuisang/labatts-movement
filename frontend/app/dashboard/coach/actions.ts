@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { isCoach } from "@/lib/coachAuth";
 import { revalidatePath } from "next/cache";
 
+// ─── Existing actions (unchanged) ───
+
 export async function addProgressEntry(formData: FormData) {
   if (!(await isCoach())) throw new Error("Not authorized");
 
@@ -68,4 +70,129 @@ export async function generateContract(bookingId: string) {
   });
 
   revalidatePath("/dashboard/coach");
+}
+
+// ─── New: content management ───
+
+export async function seedDefaultContent() {
+  if (!(await isCoach())) throw new Error("Not authorized");
+
+  const existingSessions = await prisma.sessionOption.count();
+  const existingEquipment = await prisma.equipmentItem.count();
+
+  if (existingSessions === 0) {
+    await prisma.sessionOption.createMany({
+      data: [
+        { name: "Explosive Vertical Power", duration: "60 min", price: 2500 },
+        { name: "Elite Agility Patterns", duration: "60 min", price: 2500 },
+        { name: "Sprint Mechanics & Starts", duration: "45 min", price: 2000 },
+        { name: "Balance & Coordination (Kids)", duration: "45 min", price: 1500 },
+        { name: "Custom Training Consultation", duration: "30 min", price: 1000 },
+      ],
+    });
+  }
+
+  if (existingEquipment === 0) {
+    await prisma.equipmentItem.createMany({
+      data: [
+        {
+          name: '24" Plyo Box',
+          description: "Adjustable-height plyometric box for jump training and step-ups.",
+          imageUrl: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600",
+          pricePerDay: 500,
+          category: "Plyometrics",
+        },
+        {
+          name: "Agility Ladder Set",
+          description: "20ft agility ladder with carrying bag for footwork and speed drills.",
+          imageUrl: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=600",
+          pricePerDay: 300,
+          category: "Agility",
+        },
+        {
+          name: "Weighted Vest (10kg)",
+          description: "Adjustable weighted vest for resistance training and conditioning.",
+          imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=600",
+          pricePerDay: 400,
+          category: "Strength",
+        },
+        {
+          name: "Starting Blocks",
+          description: "Adjustable track starting blocks for sprint training.",
+          imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=600",
+          pricePerDay: 600,
+          category: "Sprinting",
+          available: false,
+        },
+      ],
+    });
+  }
+
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/book-session");
+  revalidatePath("/equipment-hire");
+}
+
+export async function addSessionOption(formData: FormData) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+
+  const name = formData.get("name") as string;
+  const duration = formData.get("duration") as string;
+  const price = Number(formData.get("price"));
+
+  if (!name || !duration || !price) throw new Error("Name, duration, and price are required");
+
+  await prisma.sessionOption.create({ data: { name, duration, price } });
+
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/book-session");
+}
+
+export async function toggleSessionActive(id: string, active: boolean) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+  await prisma.sessionOption.update({ where: { id }, data: { active } });
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/book-session");
+}
+
+export async function deleteSessionOption(id: string) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+  await prisma.sessionOption.delete({ where: { id } });
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/book-session");
+}
+
+export async function addEquipmentItem(formData: FormData) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const imageUrl = formData.get("imageUrl") as string;
+  const pricePerDay = Number(formData.get("pricePerDay"));
+  const category = formData.get("category") as string;
+
+  if (!name || !description || !imageUrl || !pricePerDay || !category) {
+    throw new Error("All fields are required");
+  }
+
+  await prisma.equipmentItem.create({
+    data: { name, description, imageUrl, pricePerDay, category },
+  });
+
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/equipment-hire");
+}
+
+export async function toggleEquipmentAvailable(id: string, available: boolean) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+  await prisma.equipmentItem.update({ where: { id }, data: { available } });
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/equipment-hire");
+}
+
+export async function deleteEquipmentItem(id: string) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+  await prisma.equipmentItem.delete({ where: { id } });
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/equipment-hire");
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 const navLinks = [
@@ -13,7 +13,15 @@ const navLinks = [
 
 export default function TopNavBar() {
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchValue.trim()) {
+      router.push(`/activity-library?search=${encodeURIComponent(searchValue.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-surface shadow-sm w-full">
@@ -56,6 +64,9 @@ export default function TopNavBar() {
             </span>
             <input
               type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleSearchSubmit}
               placeholder="Search training videos..."
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}

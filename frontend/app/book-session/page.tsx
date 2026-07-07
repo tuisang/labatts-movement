@@ -1,8 +1,14 @@
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 import BookingForm from "@/components/booking/BookingForm";
+import { prisma } from "@/lib/prisma";
 
-export default function BookSessionPage() {
+export default async function BookSessionPage() {
+  const sessions = await prisma.sessionOption.findMany({
+    where: { active: true },
+    orderBy: { createdAt: "asc" },
+  });
+
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
       <TopNavBar />
@@ -15,7 +21,15 @@ export default function BookSessionPage() {
           Reserve your spot with one of our coaches.
         </p>
 
-        <BookingForm />
+        {sessions.length === 0 ? (
+          <div className="bg-surface-container-lowest rounded-xl p-10 video-card-shadow max-w-xl text-center">
+            <p className="text-on-surface-variant">
+              No sessions are available to book right now. Please check back soon.
+            </p>
+          </div>
+        ) : (
+          <BookingForm sessions={sessions} />
+        )}
       </main>
 
       <Footer />

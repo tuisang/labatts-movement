@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 import FilterSidebar, { ActiveFilters, emptyFilters } from "@/components/activity-library/FilterSidebar";
@@ -10,13 +11,23 @@ import { videoLibraryData } from "@/components/activity-library/types";
 const categoryTabs = ["Fundamental Movement Skills", "Agility Training", "School Class Activities"];
 const PAGE_SIZE = 6;
 
-export default function ActivityLibraryPage() {
+function ActivityLibraryContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchQuery = searchParams.get("search") ?? "";
+
   const [filters, setFilters] = useState<ActiveFilters>(emptyFilters);
   const [activeTab, setActiveTab] = useState(categoryTabs[1]);
   const [page, setPage] = useState(1);
 
   const filteredVideos = useMemo(() => {
     return videoLibraryData.filter((video) => {
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const matchesSearch =
+          video.title.toLowerCase().includes(q) || video.description.toLowerCase().includes(q);
+        if (!matchesSearch) return false;
+      }
       if (filters.ageGroup.length > 0 && !filters.ageGroup.includes(video.ageGroup)) return false;
       if (filters.difficulty.length > 0 && !filters.difficulty.includes(video.difficulty)) return false;
       if (filters.setting.length > 0 && !filters.setting.includes(video.setting)) return false;
@@ -49,6 +60,20 @@ export default function ActivityLibraryPage() {
           Elite training for every athlete. Explore over 500+ instructional videos designed by
           professional coaches.
         </p>
+
+        {searchQuery && (
+          <div className="flex items-center gap-3 mb-6 bg-surface-container rounded-lg px-4 py-2.5 w-fit">
+            <span className="text-sm text-on-surface-variant">
+              Showing results for <span className="font-medium text-on-surface">&quot;{searchQuery}&quot;</span>
+            </span>
+            <button
+              onClick={() => router.push("/activity-library")}
+              className="text-primary text-sm font-medium hover:underline"
+            >
+              Clear
+            </button>
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-3 mb-10">
           {categoryTabs.map((tab) => (
@@ -124,5 +149,13 @@ export default function ActivityLibraryPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function ActivityLibraryPage() {
+  return (
+    <Suspense fallback={null}>
+      <ActivityLibraryContent />
+    </Suspense>
   );
 }

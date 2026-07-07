@@ -157,3 +157,29 @@ model InstitutionBooking {
 
   @@map("institution_bookings")
 }
+
+model SessionOption {
+  id        String   @id @default(cuid())
+  name      String
+  duration  String
+  price     Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("session_options")
+}
+
+model EquipmentItem {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  imageUrl     String
+  pricePerDay  Int
+  category     String
+  available    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("equipment_items")
+}
