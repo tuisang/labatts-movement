@@ -6,9 +6,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin", "/api/", "/dashboard", "/chat-history"],
+        disallow: ["/dashboard", "/api/"],
       },
     ],
-    sitemap: "https://rarewoodscrew.tuistech.co.ke/sitemap.xml",
+    sitemap: "https://labattsmovement.tuistech.co.ke/sitemap.xml",
   };
 }
