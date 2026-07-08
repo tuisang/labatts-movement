@@ -8,6 +8,8 @@ const isPublicRoute = createRouteMatcher([
   "/parent-portal(.*)",
   "/institution-contract(.*)",
   "/book-session(.*)",
+  "/terms",
+  "/privacy",
   "/dashboard(.*)",
   "/api/mpesa/callback(.*)",
   "/api/mpesa/shop-callback(.*)",

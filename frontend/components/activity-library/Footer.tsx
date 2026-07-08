@@ -18,13 +18,13 @@ export default function Footer() {
             </h4>
             <a
               className="text-surface-container-highest font-label-sm hover:text-primary-fixed-dim transition-colors"
-              href="#"
+              href="/privacy"
             >
               Privacy Policy
             </a>
             <a
               className="text-surface-container-highest font-label-sm hover:text-primary-fixed-dim transition-colors"
-              href="#"
+              href="/terms"
             >
               Terms of Service
             </a>
