@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { VideoCardData, difficultyBadgeClasses } from "./types";
 
 export default function VideoCard({ video }: { video: VideoCardData }) {
@@ -56,10 +57,13 @@ export default function VideoCard({ video }: { video: VideoCardData }) {
             <span className="text-label-sm text-on-surface-variant">{video.views}</span>
           </div>
         </div>
-        <button className="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-colors">
+        <Link
+          href={`/activity-library/${video.id}`}
+          className="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-colors"
+        >
           Watch Lesson
           <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-        </button>
+        </Link>
       </div>
     </div>
   );

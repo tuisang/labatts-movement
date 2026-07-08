@@ -13,6 +13,7 @@ interface BookingData {
   paymentMethod: string;
   status: string;
   mpesaReceiptNumber: string | null;
+  athleteName?: string | null;
 }
 
 const statusOptions = ["pending", "awaiting_payment", "confirmed", "completed", "cancelled"];
@@ -38,6 +39,7 @@ export default function CoachBookingsTable({ bookings }: { bookings: BookingData
           <thead>
             <tr className="text-left text-on-surface-variant text-xs uppercase tracking-wider border-b border-outline-variant/50">
               <th className="px-5 py-3 font-medium">Client</th>
+              <th className="px-5 py-3 font-medium">Athlete</th>
               <th className="px-5 py-3 font-medium">Service</th>
               <th className="px-5 py-3 font-medium">Date</th>
               <th className="px-5 py-3 font-medium">Payment</th>
@@ -53,6 +55,9 @@ export default function CoachBookingsTable({ bookings }: { bookings: BookingData
                   <p className="text-xs text-on-surface-variant">
                     {booking.phone} • {booking.email}
                   </p>
+                </td>
+                <td className="px-5 py-4 text-on-surface-variant">
+                  {booking.athleteName ?? "—"}
                 </td>
                 <td className="px-5 py-4 text-on-surface">{booking.service}</td>
                 <td className="px-5 py-4 text-on-surface-variant">{booking.date}</td>

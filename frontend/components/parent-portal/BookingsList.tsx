@@ -3,6 +3,7 @@ interface BookingData {
   service: string;
   date: string;
   status: string;
+  athleteName?: string | null;
 }
 
 const statusClasses: Record<string, string> = {
@@ -33,7 +34,10 @@ export default function BookingsList({ bookings }: { bookings: BookingData[] }) 
             >
               <div>
                 <p className="text-sm font-medium text-on-surface">{booking.service}</p>
-                <p className="text-xs text-on-surface-variant">{booking.date}</p>
+                <p className="text-xs text-on-surface-variant">
+                  {booking.date}
+                  {booking.athleteName ? ` • ${booking.athleteName}` : ""}
+                </p>
               </div>
               <span
                 className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${

@@ -10,6 +10,7 @@ export async function createBooking(data: {
   service: string;
   date: string;
   paymentMethod: string;
+  athleteId?: string;
 }) {
   const { userId } = await auth();
 
@@ -27,6 +28,7 @@ export async function createBooking(data: {
       paymentMethod: data.paymentMethod,
       status: "pending",
       clerkUserId: userId ?? null,
+      athleteId: data.athleteId || null,
     },
   });
 

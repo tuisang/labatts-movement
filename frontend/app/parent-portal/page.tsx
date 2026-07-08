@@ -19,10 +19,19 @@ async function ParentDashboard() {
     }),
     prisma.booking.findMany({
       where: { clerkUserId: userId },
+      include: { athlete: true },
       orderBy: { createdAt: "desc" },
       take: 10,
     }),
   ]);
+
+  const bookingsWithAthleteName = bookings.map((b) => ({
+    id: b.id,
+    service: b.service,
+    date: b.date,
+    status: b.status,
+    athleteName: b.athlete?.name ?? null,
+  }));
 
   return (
     <div className="flex flex-col gap-8">
@@ -51,7 +60,7 @@ async function ParentDashboard() {
         </div>
       )}
 
-      <BookingsList bookings={bookings} />
+      <BookingsList bookings={bookingsWithAthleteName} />
     </div>
   );
 }

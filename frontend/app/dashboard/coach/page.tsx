@@ -30,12 +30,13 @@ async function CoachDashboardContent() {
     );
   }
 
-  const [athletes, bookings, institutionBookings, sessions, equipment] = await Promise.all([
+  const [athletes, bookingsRaw, institutionBookings, sessions, equipment] = await Promise.all([
     prisma.athlete.findMany({
       include: { progress: { orderBy: { recordedAt: "desc" } } },
       orderBy: { createdAt: "desc" },
     }),
     prisma.booking.findMany({
+      include: { athlete: true },
       orderBy: { createdAt: "desc" },
     }),
     prisma.institutionBooking.findMany({
@@ -44,6 +45,19 @@ async function CoachDashboardContent() {
     prisma.sessionOption.findMany({ orderBy: { createdAt: "asc" } }),
     prisma.equipmentItem.findMany({ orderBy: { createdAt: "asc" } }),
   ]);
+
+  const bookings = bookingsRaw.map((b) => ({
+    id: b.id,
+    name: b.name,
+    phone: b.phone,
+    email: b.email,
+    service: b.service,
+    date: b.date,
+    paymentMethod: b.paymentMethod,
+    status: b.status,
+    mpesaReceiptNumber: b.mpesaReceiptNumber,
+    athleteName: b.athlete?.name ?? null,
+  }));
 
   return (
     <div className="flex flex-col gap-10 w-full">

@@ -11,9 +11,21 @@ interface SessionOptionData {
   price: number;
 }
 
+interface AthleteData {
+  id: string;
+  name: string;
+  ageGroup: string;
+}
+
 type Step = "form" | "awaiting-payment" | "error";
 
-export default function BookingForm({ sessions }: { sessions: SessionOptionData[] }) {
+export default function BookingForm({
+  sessions,
+  athletes,
+}: {
+  sessions: SessionOptionData[];
+  athletes: AthleteData[];
+}) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("form");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,9 +43,18 @@ export default function BookingForm({ sessions }: { sessions: SessionOptionData[
     const service = formData.get("service") as string;
     const date = formData.get("date") as string;
     const paymentMethod = formData.get("paymentMethod") as string;
+    const athleteId = formData.get("athleteId") as string;
 
     try {
-      const { bookingId } = await createBooking({ name, phone, email, service, date, paymentMethod });
+      const { bookingId } = await createBooking({
+        name,
+        phone,
+        email,
+        service,
+        date,
+        paymentMethod,
+        athleteId: athleteId || undefined,
+      });
 
       if (paymentMethod === "mpesa") {
         const res = await fetch("/api/mpesa/stk-push", {
@@ -129,6 +150,33 @@ export default function BookingForm({ sessions }: { sessions: SessionOptionData[
           />
         </div>
       </div>
+
+      {athletes.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-on-surface mb-1">
+            Which athlete is this for?
+          </label>
+          <select
+            name="athleteId"
+            defaultValue=""
+            className="w-full border border-outline-variant rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-surface-container-lowest"
+          >
+            <option value="">Not specified / general booking</option>
+            {athletes.map((athlete) => (
+              <option key={athlete.id} value={athlete.id}>
+                {athlete.name} ({athlete.ageGroup})
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-on-surface-variant mt-1">
+            Don&apos;t see your athlete?{" "}
+            <a href="/parent-portal" className="text-primary underline">
+              Add them in Parent Portal
+            </a>{" "}
+            first.
+          </p>
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-on-surface mb-1">Session</label>

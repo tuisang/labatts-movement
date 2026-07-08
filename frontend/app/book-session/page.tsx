@@ -1,13 +1,24 @@
+import { auth } from "@clerk/nextjs/server";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 import BookingForm from "@/components/booking/BookingForm";
 import { prisma } from "@/lib/prisma";
 
 export default async function BookSessionPage() {
-  const sessions = await prisma.sessionOption.findMany({
-    where: { active: true },
-    orderBy: { createdAt: "asc" },
-  });
+  const { userId } = await auth();
+
+  const [sessions, athletes] = await Promise.all([
+    prisma.sessionOption.findMany({
+      where: { active: true },
+      orderBy: { createdAt: "asc" },
+    }),
+    userId
+      ? prisma.athlete.findMany({
+          where: { parentClerkId: userId },
+          orderBy: { createdAt: "asc" },
+        })
+      : Promise.resolve([]),
+  ]);
 
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
@@ -28,7 +39,7 @@ export default async function BookSessionPage() {
             </p>
           </div>
         ) : (
-          <BookingForm sessions={sessions} />
+          <BookingForm sessions={sessions} athletes={athletes} />
         )}
       </main>
 

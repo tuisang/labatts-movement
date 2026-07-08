@@ -8,7 +8,7 @@ datasource db {
 
 model ChatSession {
   id          String        @id @default(cuid())
-  clerkUserId String?
+  clerkUserId        String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   messages    ChatMessage[]
@@ -37,6 +37,8 @@ model Booking {
   paymentMethod      String
   status             String   @default("pending")
   clerkUserId        String?
+  athleteId          String?
+  athlete            Athlete? @relation(fields: [athleteId], references: [id])
   mpesaCheckoutId    String?
   mpesaReceiptNumber String?
   paidAmount         String?
@@ -50,7 +52,7 @@ model Booking {
 
 model Review {
   id          String   @id @default(cuid())
-  clerkUserId String?
+  clerkUserId        String?
   authorName  String
   authorEmail String?
   rating      Int
@@ -65,7 +67,7 @@ model Review {
 
 model Quote {
   id             String   @id @default(cuid())
-  clerkUserId    String?
+  clerkUserId        String?
   name           String
   email          String
   phone          String
@@ -121,6 +123,7 @@ model Athlete {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   progress      ProgressEntry[]
+  bookings      Booking[]
 
   @@map("athletes")
 }
