@@ -69,7 +69,7 @@ export default function CoachAthleteCard({
         className="flex flex-col gap-2 border-t border-outline-variant/30 pt-3"
       >
         <input type="hidden" name="athleteId" value={id} />
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <input
             name="metric"
             placeholder="Metric (e.g. Vertical jump)"

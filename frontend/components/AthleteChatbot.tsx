@@ -98,9 +98,9 @@ export default function AthleteChatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 left-6 sm:left-auto z-50 flex flex-col items-end">
       {isOpen && (
-        <div className="mb-4 w-[340px] sm:w-[380px] h-[500px] bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant/40 flex flex-col overflow-hidden">
+        <div className="mb-4 w-full sm:w-[380px] max-w-[380px] h-[500px] bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant/40 flex flex-col overflow-hidden">
           <div className="bg-primary text-on-primary px-5 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[22px]">sports</span>

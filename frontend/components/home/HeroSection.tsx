@@ -1,6 +1,6 @@
 export default function HeroSection() {
   return (
-    <section className="relative w-full h-[600px] md:h-[700px] overflow-hidden">
+    <section className="relative w-full min-h-[600px] md:min-h-[700px] overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -10,7 +10,7 @@ export default function HeroSection() {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
 
-      <div className="relative z-10 max-w-container-max mx-auto h-full flex flex-col justify-center px-margin-mobile md:px-margin-desktop">
+      <div className="relative z-10 max-w-container-max mx-auto min-h-[600px] md:min-h-[700px] flex flex-col justify-center px-margin-mobile md:px-margin-desktop pb-24 sm:pb-6">
         <div className="flex items-center gap-2 mb-6">
           <span className="bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
             Featured Program
