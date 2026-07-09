@@ -18,6 +18,16 @@ export async function createBooking(data: {
     throw new Error("All fields are required");
   }
 
+  // Rate limit: max 3 bookings per email per 10 minutes, to deter spam
+  // without needing separate IP-tracking infrastructure.
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const recentBookings = await prisma.booking.count({
+    where: { email: data.email, createdAt: { gte: tenMinutesAgo } },
+  });
+  if (recentBookings >= 3) {
+    throw new Error("Too many booking attempts. Please wait a few minutes and try again.");
+  }
+
   const booking = await prisma.booking.create({
     data: {
       name: data.name,

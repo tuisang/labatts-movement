@@ -47,14 +47,14 @@ export const metadata: Metadata = {
     title: "Labatts Movement | Elite Athletic Training Nairobi",
     description:
       "Elite athletic training platform in Nairobi, Kenya. Instructional videos, coach-led sessions, and performance tracking for athletes of all ages.",
-    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Labatts Movement - Elite Athletic Training" }],
+
   },
   twitter: {
     card: "summary_large_image",
     title: "Labatts Movement | Elite Athletic Training Nairobi",
     description:
       "Elite athletic training platform in Nairobi, Kenya. Instructional videos, coach-led sessions, and performance tracking.",
-    images: [OG_IMAGE],
+
     creator: "@labattsmovement",
   },
   robots: {

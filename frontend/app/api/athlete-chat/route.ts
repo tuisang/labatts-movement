@@ -43,6 +43,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
+    // Rate limit: max 20 messages per user per hour. Each Gemini call costs
+    // real money, so this protects against runaway usage/abuse. We count
+    // actual stored ChatMessage rows rather than an in-memory counter, since
+    // serverless functions don't reliably share memory between invocations.
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentMessageCount = await prisma.chatMessage.count({
+      where: {
+        role: "user",
+        createdAt: { gte: oneHourAgo },
+        session: { clerkUserId: userId },
+      },
+    });
+
+    if (recentMessageCount >= 20) {
+      return NextResponse.json(
+        { error: "You've reached the hourly message limit. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const lastUserMessage = messages[messages.length - 1]?.content ?? "";
     const businessData = loadRelevantAthleteData(lastUserMessage);
 

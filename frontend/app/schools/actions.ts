@@ -16,6 +16,15 @@ export async function createInstitutionInquiry(formData: FormData) {
     throw new Error("School name, contact name, email, and program are required");
   }
 
+  // Rate limit: max 3 inquiries per email per 10 minutes.
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const recentInquiries = await prisma.institutionBooking.count({
+    where: { contactEmail, createdAt: { gte: tenMinutesAgo } },
+  });
+  if (recentInquiries >= 3) {
+    throw new Error("Too many inquiries submitted recently. Please wait a few minutes and try again.");
+  }
+
   await prisma.institutionBooking.create({
     data: {
       schoolName,

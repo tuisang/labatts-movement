@@ -44,6 +44,20 @@ export default function AthleteChatbot() {
         body: JSON.stringify({ messages: nextMessages, sessionId }),
       });
 
+      if (res.status === 429) {
+        const data = await res.json().catch(() => null);
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            role: "assistant",
+            content: data?.error ?? "You've reached the hourly message limit. Please try again later.",
+          };
+          return updated;
+        });
+        setIsStreaming(false);
+        return;
+      }
+
       if (!res.ok || !res.body) {
         throw new Error("Chat request failed");
       }
