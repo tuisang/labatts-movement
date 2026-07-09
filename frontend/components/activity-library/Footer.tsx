@@ -51,17 +51,48 @@ export default function Footer() {
               Social
             </h4>
             <div className="flex gap-4">
+              {/* NOTE: placeholder handles — update these hrefs once real
+                  Labatts Movement accounts are created. */}
               <a
                 className="text-surface-container-highest hover:text-primary-fixed transition-colors"
-                href="#"
+                href="https://www.instagram.com/labattsmovement"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
               >
-                <span className="material-symbols-outlined">share</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="1.8" />
+                  <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.8" />
+                  <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
+                </svg>
               </a>
               <a
                 className="text-surface-container-highest hover:text-primary-fixed transition-colors"
-                href="#"
+                href="https://www.tiktok.com/@labattsmovement"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
               >
-                <span className="material-symbols-outlined">public</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M16.5 2h-3v13.2a2.8 2.8 0 1 1-2-2.68V9.4a5.8 5.8 0 1 0 5 5.75V9.1a7.3 7.3 0 0 0 4.5 1.55V7.6a4.3 4.3 0 0 1-4.5-4.1V2Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </a>
+              <a
+                className="text-surface-container-highest hover:text-primary-fixed transition-colors"
+                href="https://x.com/labattsmovement"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X (Twitter)"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M13.6 10.5 20 3h-2l-5.3 6.2L8.2 3H3l6.7 9.5L3 21h2l5.7-6.6 4.7 6.6H21l-7.4-10.5Zm-2 2.3-.7-1L5.6 4.5h2l4.3 6 .7 1 5.6 7.9h-2l-4.6-6.6Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </a>
             </div>
           </div>
