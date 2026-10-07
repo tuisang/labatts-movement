@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -15,8 +15,20 @@ export default function TopNavBar() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCoach, setIsCoach] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/coach-status")
+      .then((res) => res.json())
+      .then((data) => setIsCoach(Boolean(data.isCoach)))
+      .catch(() => setIsCoach(false));
+  }, []);
+
+  const links = isCoach
+    ? [...navLinks, { label: "Media Hub", href: "/dashboard/media-hub" }]
+    : navLinks;
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchValue.trim()) {
@@ -37,7 +49,7 @@ export default function TopNavBar() {
             Labatts Movement
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => {
+            {links.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
@@ -112,7 +124,7 @@ export default function TopNavBar() {
           </div>
 
           <nav className="flex flex-col gap-1">
-            {navLinks.map((link) => {
+            {links.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
