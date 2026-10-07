@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { VideoCardData, difficultyBadgeClasses } from "./types";
+import { VideoCardData, difficultyBadgeClasses, formatViews } from "./types";
 
 export default function VideoCard({ video }: { video: VideoCardData }) {
   return (
@@ -54,7 +54,7 @@ export default function VideoCard({ video }: { video: VideoCardData }) {
             <span className="material-symbols-outlined text-[18px] text-on-surface-variant">
               visibility
             </span>
-            <span className="text-label-sm text-on-surface-variant">{video.views}</span>
+            <span className="text-label-sm text-on-surface-variant">{formatViews(video.views)}</span>
           </div>
         </div>
         <Link

@@ -186,3 +186,25 @@ model EquipmentItem {
 
   @@map("equipment_items")
 }
+
+model ActivityVideo {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  videoUrl      String
+  videoPublicId String
+  thumbnailUrl  String
+  duration      String
+  difficulty    String // Beginner | Intermediate | Advanced
+  ageGroup      String
+  coach         String
+  setting       String // Indoor | Outdoor
+  equipment     String[]
+  views         Int      @default(0)
+  status        String   @default("draft") // draft | published | archived
+  clerkUserId   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("activity_videos")
+}

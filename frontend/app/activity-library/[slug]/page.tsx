@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
-import { videoLibraryData, difficultyBadgeClasses } from "@/components/activity-library/types";
-
-export function generateStaticParams() {
-  return videoLibraryData.map((video) => ({ slug: video.id }));
-}
+import { difficultyBadgeClasses, formatViews } from "@/components/activity-library/types";
+import {
+  getPublishedActivityVideoById,
+  incrementActivityVideoViews,
+} from "../actions";
 
 export default async function VideoDetailPage({
   params,
@@ -13,11 +13,14 @@ export default async function VideoDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const video = videoLibraryData.find((v) => v.id === slug);
+  const video = await getPublishedActivityVideoById(slug);
 
   if (!video) {
     notFound();
   }
+
+  // Best-effort view count; failures here must never block the page.
+  incrementActivityVideoViews(video.id);
 
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
@@ -42,22 +45,17 @@ export default async function VideoDetailPage({
         </div>
 
         <div className="relative aspect-video rounded-xl overflow-hidden bg-inverse-surface mb-8">
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-90"
-            style={{ backgroundImage: `url('${video.thumbnailUrl}')` }}
-          />
-          <div className="absolute inset-0 bg-black/30" />
-          <button className="absolute inset-0 flex items-center justify-center group">
-            <span className="w-20 h-20 flex items-center justify-center rounded-full bg-primary group-hover:bg-primary-container transition-colors">
-              <span
-                className="material-symbols-outlined text-white text-[36px] translate-x-1"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                play_arrow
-              </span>
-            </span>
-          </button>
-          <span className="absolute bottom-3 right-3 bg-black/80 text-white text-label-sm px-2 py-1 rounded">
+          <video
+            className="absolute inset-0 w-full h-full object-contain bg-black"
+            src={video.videoUrl}
+            poster={video.thumbnailUrl}
+            controls
+            playsInline
+            preload="metadata"
+          >
+            Your browser does not support video playback.
+          </video>
+          <span className="absolute bottom-3 right-3 bg-black/80 text-white text-label-sm px-2 py-1 rounded pointer-events-none">
             {video.duration}
           </span>
         </div>
@@ -93,7 +91,7 @@ export default async function VideoDetailPage({
               </div>
               <div className="flex justify-between">
                 <dt className="text-on-surface-variant">Views</dt>
-                <dd className="text-on-surface font-medium">{video.views}</dd>
+                <dd className="text-on-surface font-medium">{formatViews(video.views)}</dd>
               </div>
             </dl>
           </div>

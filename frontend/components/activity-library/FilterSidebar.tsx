@@ -1,6 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import {
+  AGE_GROUP_OPTIONS,
+  DIFFICULTY_OPTIONS,
+  SETTING_OPTIONS,
+  EQUIPMENT_OPTIONS,
+} from "./filterOptions";
 
 export interface ActiveFilters {
   ageGroup: string[];
@@ -26,10 +32,10 @@ interface FilterCategory {
 // Note: "Skill Level" from the original design and "Difficulty" both map to the
 // same underlying field — the data model only tracks one skill dimension.
 const categories: FilterCategory[] = [
-  { key: "ageGroup", icon: "mood", label: "Age", options: ["Ages 4-7", "Ages 5-8", "Ages 10+", "Ages 12+", "Ages 16+"] },
-  { key: "difficulty", icon: "trending_up", label: "Skill Level", options: ["Beginner", "Intermediate", "Advanced"] },
-  { key: "setting", icon: "home_work", label: "Indoor/Outdoor", options: ["Indoor", "Outdoor"] },
-  { key: "equipment", icon: "build", label: "Equipment", options: ["Plyo Box", "Cones", "Agility Ladder", "Soccer Ball", "Starting Blocks", "None"] },
+  { key: "ageGroup", icon: "mood", label: "Age", options: AGE_GROUP_OPTIONS },
+  { key: "difficulty", icon: "trending_up", label: "Skill Level", options: [...DIFFICULTY_OPTIONS] },
+  { key: "setting", icon: "home_work", label: "Indoor/Outdoor", options: [...SETTING_OPTIONS] },
+  { key: "equipment", icon: "build", label: "Equipment", options: EQUIPMENT_OPTIONS },
 ];
 
 export default function FilterSidebar({

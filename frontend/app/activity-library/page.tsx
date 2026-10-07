@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState, Suspense } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 import FilterSidebar, { ActiveFilters, emptyFilters } from "@/components/activity-library/FilterSidebar";
 import VideoCard from "@/components/activity-library/VideoCard";
-import { videoLibraryData } from "@/components/activity-library/types";
+import { VideoCardData } from "@/components/activity-library/types";
+import { getPublishedActivityVideos } from "./actions";
 
 const categoryTabs = ["Fundamental Movement Skills", "Agility Training", "School Class Activities"];
 const PAGE_SIZE = 6;
@@ -16,12 +17,20 @@ function ActivityLibraryContent() {
   const router = useRouter();
   const searchQuery = searchParams.get("search") ?? "";
 
+  const [videos, setVideos] = useState<VideoCardData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<ActiveFilters>(emptyFilters);
   const [activeTab, setActiveTab] = useState(categoryTabs[1]);
   const [page, setPage] = useState(1);
 
+  useEffect(() => {
+    getPublishedActivityVideos()
+      .then(setVideos)
+      .finally(() => setLoading(false));
+  }, []);
+
   const filteredVideos = useMemo(() => {
-    return videoLibraryData.filter((video) => {
+    return videos.filter((video) => {
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         const matchesSearch =
