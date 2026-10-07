@@ -32,12 +32,14 @@ export async function POST() {
 
   const timestamp = Math.round(Date.now() / 1000);
 
-  // Only these params may be included in the signed upload — the client
-  // must send exactly this set back, or Cloudinary will reject it.
+  // Only these params are part of the signature. resource_type is
+  // deliberately excluded — Cloudinary infers it from the /video/upload
+  // URL and never includes it when it recomputes the signature server-side,
+  // so signing it here would make every signature mismatch and get
+  // rejected as invalid.
   const paramsToSign = {
     timestamp,
     folder: UPLOAD_FOLDER,
-    resource_type: "video",
   };
 
   const signature = cloudinary.utils.api_sign_request(
