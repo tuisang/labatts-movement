@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-
-const ADMIN_USER_ID = "user_3FOCtiBnlnMNPZ1naaYqyDcUFpP";
+import { isCoach } from "@/lib/coachAuth";
 
 export async function GET(
   req: NextRequest,
@@ -22,7 +21,7 @@ export async function GET(
 
     // Allow access only to the booking's owner or the admin
     const isOwner = userId && booking.clerkUserId === userId;
-    const isAdmin = userId === ADMIN_USER_ID;
+    const isAdmin = await isCoach();
 
     if (!isOwner && !isAdmin) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

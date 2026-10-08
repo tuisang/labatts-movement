@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { isCoach } from "@/lib/coachAuth";
 import { loadRelevantData } from "@/lib/chatData";
 
-const ADMIN_USER_ID = "user_3FOCtiBnlnMNPZ1naaYqyDcUFpP";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
 const GEMINI_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:streamGenerateContent?alt=sse&key=" +
@@ -19,7 +19,7 @@ export async function GET() {
   }
 
   const sessions = await prisma.chatSession.findMany({
-    where: userId === ADMIN_USER_ID ? {} : { clerkUserId: userId },
+    where: (await isCoach()) ? {} : { clerkUserId: userId },
     include: { messages: { orderBy: { createdAt: "asc" } } },
     orderBy: { createdAt: "desc" },
   });

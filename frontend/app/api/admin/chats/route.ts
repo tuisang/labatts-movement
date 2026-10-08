@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
-
-const ADMIN_USER_ID = "user_3FOCtiBnlnMNPZ1naaYqyDcUFpP";
+import { isCoach } from "@/lib/coachAuth";
 
 export async function GET() {
-  const { userId } = await auth();
-  if (userId !== ADMIN_USER_ID) {
+  if (!(await isCoach())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

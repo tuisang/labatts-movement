@@ -5,8 +5,6 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 
-const ADMIN_USER_ID = "user_3FOCtiBnlnMNPZ1naaYqyDcUFpP";
-
 interface Booking {
   id: string;
   name: string;
@@ -101,14 +99,25 @@ export default function AdminPage() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeQuote, setActiveQuote] = useState<Quote | null>(null);
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!isLoaded) return;
-    if (!user || user.id !== ADMIN_USER_ID) {
+    if (!user) {
       router.push("/");
       return;
     }
-    fetchAll();
+    fetch("/api/coach-status")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.isCoach) {
+          router.push("/");
+          return;
+        }
+        setAuthorized(true);
+        fetchAll();
+      })
+      .catch(() => router.push("/"));
   }, [isLoaded, user]);
 
   const fetchAll = async () => {
@@ -192,7 +201,7 @@ export default function AdminPage() {
       hour: "2-digit", minute: "2-digit",
     });
 
-  if (!isLoaded || (isLoaded && user?.id !== ADMIN_USER_ID)) {
+  if (!isLoaded || !authorized) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex gap-3">
