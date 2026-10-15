@@ -42,7 +42,7 @@ export default function EquipmentCard({ item }: { item: EquipmentItem }) {
               href={`mailto:info@tuistech.co.ke?subject=${encodeURIComponent(
                 `Equipment Hire Request: ${item.name}`
               )}&body=${encodeURIComponent(
-                `Hi Labatts Movement,\n\nI'd like to request hire of the ${item.name} (KSh ${item.pricePerDay}/day). Please let me know availability and next steps.\n\nThanks!`
+                `Hi Tuistech Movement,\n\nI'd like to request hire of the ${item.name} (KSh ${item.pricePerDay}/day). Please let me know availability and next steps.\n\nThanks!`
               )}`}
               className="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-label-md hover:bg-primary-container transition-colors"
             >

@@ -15,7 +15,7 @@ export default function AthleteChatbot() {
     {
       role: "assistant",
       content:
-        "Hey! I'm Athlete, your Labatts Movement assistant. Ask me about training programs, pricing, or how booking works.",
+        "Hey! I'm Athlete, your Tuistech Movement assistant. Ask me about training programs, pricing, or how booking works.",
     },
   ]);
   const [input, setInput] = useState("");

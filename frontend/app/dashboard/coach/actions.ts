@@ -37,9 +37,9 @@ export async function updateBookingStatus(bookingId: string, status: string) {
 }
 
 const DEFAULT_CONTRACT_TEMPLATE = (schoolName: string, program: string) => `
-LABATTS MOVEMENT — INSTITUTIONAL TRAINING AGREEMENT
+TUISTECH MOVEMENT — INSTITUTIONAL TRAINING AGREEMENT
 
-This agreement is between Labatts Movement ("Provider") and ${schoolName} ("Institution")
+This agreement is between Tuistech Movement ("Provider") and ${schoolName} ("Institution")
 for the provision of the "${program}" program.
 
 1. Scope: Provider will deliver the agreed training program to Institution's

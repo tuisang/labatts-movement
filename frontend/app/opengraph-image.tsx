@@ -51,7 +51,7 @@ export default function OpengraphImage() {
             marginBottom: 12,
           }}
         >
-          Labatts Movement
+          Tuistech Movement
         </div>
         <div
           style={{

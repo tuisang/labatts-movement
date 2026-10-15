@@ -17,7 +17,7 @@ async function sendEmail(to: string, subject: string, html: string) {
   try {
     console.log(`📧 Sending email to ${to} via ${process.env.SMTP_HOST}:${process.env.SMTP_PORT} as ${process.env.SMTP_USER}`);
     const info = await transporter.sendMail({
-  from: `"Labatts Movement" <${FROM_EMAIL}>`,
+  from: `"Tuistech Movement" <${FROM_EMAIL}>`,
   replyTo: ADMIN_EMAIL,
   to,
   subject,
@@ -40,7 +40,7 @@ interface BookingEmailData {
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData) {
   const { clientName, clientEmail, service, date, paymentMethod, bookingId } = data;
-  await sendEmail(clientEmail, "Booking Confirmed – Labatts Movement",
+  await sendEmail(clientEmail, "Booking Confirmed – Tuistech Movement",
     bookingClientHtml({ clientName, service, date, paymentMethod, bookingId }));
   await sendEmail(ADMIN_EMAIL, `New Booking – ${clientName} (${service})`,
     bookingAdminHtml({ clientName, clientEmail, service, date, paymentMethod, bookingId }));
@@ -74,7 +74,7 @@ const baseStyle = `background:#fef8f1;font-family:Arial,Helvetica,sans-serif;mar
 const headerHtml = (subtitle: string) => `
   <tr>
     <td style="background:#ffffff;border-top:3px solid #a83300;padding:36px 40px;text-align:center;">
-      <h1 style="margin:0;color:#a83300;font-size:26px;">Labatts Movement</h1>
+      <h1 style="margin:0;color:#a83300;font-size:26px;">Tuistech Movement</h1>
       <p style="margin:6px 0 0;color:#8c7263;font-size:11px;font-family:monospace;">ELITE ATHLETIC TRAINING &middot; NAIROBI</p>
       <p style="margin:12px 0 0;color:#d24200;font-size:11px;font-family:monospace;">${subtitle}</p>
     </td>
@@ -83,7 +83,7 @@ const headerHtml = (subtitle: string) => `
 const footerHtml = `
   <tr>
     <td style="background:#ffffff;padding:24px 40px;border-top:1px solid rgba(224,192,175,0.3);">
-      <p style="color:#8c7263;font-size:12px;margin:0 0 4px;">Labatts Movement &middot; Nairobi, Kenya</p>
+      <p style="color:#8c7263;font-size:12px;margin:0 0 4px;">Tuistech Movement &middot; Nairobi, Kenya</p>
       <p style="color:#e0c0af;font-size:11px;margin:0;">+254 726 461 196 &middot; info@tuistech.co.ke</p>
     </td>
   </tr>`;

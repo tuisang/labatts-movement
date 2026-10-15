@@ -66,11 +66,11 @@ export async function POST(req: NextRequest) {
     const lastUserMessage = messages[messages.length - 1]?.content ?? "";
     const businessData = loadRelevantAthleteData(lastUserMessage);
 
-    const systemPrompt = `You are Athlete, the AI assistant for Labatts Movement, an elite athletic training platform based in Nairobi, Kenya. You help visitors and parents understand training programs, bookings, pricing, and safety.
+    const systemPrompt = `You are Athlete, the AI assistant for Tuistech Movement, an elite athletic training platform based in Nairobi, Kenya. You help visitors and parents understand training programs, bookings, pricing, and safety.
 
-Below is the complete knowledge base for Labatts Movement. Use it to answer questions accurately. If a question is outside this knowledge base, use your best judgment but stay on-brand.
+Below is the complete knowledge base for Tuistech Movement. Use it to answer questions accurately. If a question is outside this knowledge base, use your best judgment but stay on-brand.
 
-=== LABATTS MOVEMENT KNOWLEDGE BASE ===
+=== TUISTECH MOVEMENT KNOWLEDGE BASE ===
 
 ${businessData}
 

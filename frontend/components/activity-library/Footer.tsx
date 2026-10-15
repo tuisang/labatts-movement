@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
         <div className="max-w-xs">
           <h2 className="font-headline-md text-headline-md text-primary-fixed mb-4">
-            Labatts Movement
+            Tuistech Movement
           </h2>
           <p className="text-surface-container-highest font-body-md">
             Empowering the next generation of athletes through technical precision and
@@ -52,7 +52,7 @@ export default function Footer() {
             </h4>
             <div className="flex gap-4">
               {/* NOTE: placeholder handles — update these hrefs once real
-                  Labatts Movement accounts are created. */}
+                  Tuistech Movement accounts are created. */}
               <a
                 className="text-surface-container-highest hover:text-primary-fixed transition-colors"
                 href="https://www.instagram.com/labattsmovement"
@@ -100,7 +100,7 @@ export default function Footer() {
       </div>
       <div className="max-w-container-max mx-auto mt-16 pt-8 border-t border-white/10">
         <p className="text-surface-container-highest font-label-sm">
-          © {new Date().getFullYear()} Labatts Movement. All rights reserved.
+          © {new Date().getFullYear()} Tuistech Movement. All rights reserved.
         </p>
       </div>
     </footer>

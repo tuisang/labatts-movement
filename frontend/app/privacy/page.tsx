@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-semibold text-on-surface mb-2">1. Introduction</h2>
             <p>
-              This Privacy Policy explains how Labatts Movement (&quot;we&quot;,
+              This Privacy Policy explains how Tuistech Movement (&quot;we&quot;,
               &quot;us&quot;) collects, uses, and protects information when you use our website
               and services. We are based in Nairobi, Kenya, and aim to handle personal data in
               line with Kenya&apos;s Data Protection Act, 2019.

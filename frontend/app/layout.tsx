@@ -18,8 +18,8 @@ const OG_IMAGE = "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
-    default: "Labatts Movement | Elite Athletic Training Nairobi",
-    template: "%s | Labatts Movement",
+    default: "Tuistech Movement | Elite Athletic Training Nairobi",
+    template: "%s | Tuistech Movement",
   },
   description:
     "Elite athletic training platform in Nairobi, Kenya. Instructional videos, coach-led sessions, and performance tracking for athletes of all ages.",
@@ -29,29 +29,29 @@ export const metadata: Metadata = {
     "youth sports Nairobi",
     "agility training Kenya",
     "plyometric training Nairobi",
-    "Labatts Movement",
+    "Tuistech Movement",
     "sports coaching Nairobi",
     "PE program Kenya",
     "athlete development Nairobi",
     "fitness training Kenya",
   ],
-  authors: [{ name: "Labatts Movement", url: "https://tuistech.co.ke" }],
-  creator: "Labatts Movement",
-  publisher: "Labatts Movement",
+  authors: [{ name: "Tuistech Movement", url: "https://tuistech.co.ke" }],
+  creator: "Tuistech Movement",
+  publisher: "Tuistech Movement",
   category: "Sports & Athletic Training",
   openGraph: {
     type: "website",
     locale: "en_KE",
     url: "https://labattsmovement.tuistech.co.ke",
-    siteName: "Labatts Movement",
-    title: "Labatts Movement | Elite Athletic Training Nairobi",
+    siteName: "Tuistech Movement",
+    title: "Tuistech Movement | Elite Athletic Training Nairobi",
     description:
       "Elite athletic training platform in Nairobi, Kenya. Instructional videos, coach-led sessions, and performance tracking for athletes of all ages.",
 
   },
   twitter: {
     card: "summary_large_image",
-    title: "Labatts Movement | Elite Athletic Training Nairobi",
+    title: "Tuistech Movement | Elite Athletic Training Nairobi",
     description:
       "Elite athletic training platform in Nairobi, Kenya. Instructional videos, coach-led sessions, and performance tracking.",
 
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SportsActivityLocation",
-  name: "Labatts Movement",
+  name: "Tuistech Movement",
   description:
     "Elite athletic training platform in Nairobi, Kenya. Instructional videos, coach-led sessions, and performance tracking for athletes of all ages.",
   url: "https://labattsmovement.tuistech.co.ke",

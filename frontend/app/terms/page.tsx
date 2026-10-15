@@ -16,7 +16,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-on-surface mb-2">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using the Labatts Movement website, booking a training session,
+              By accessing or using the Tuistech Movement website, booking a training session,
               hiring equipment, or otherwise using our services (collectively, the
               &quot;Services&quot;), you agree to be bound by these Terms of Service. If you are
               booking or registering on behalf of a minor (an athlete under 18), you confirm you
@@ -28,7 +28,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-on-surface mb-2">2. Description of Services</h2>
             <p>
-              Labatts Movement provides athletic training programs, coach-led sessions, an
+              Tuistech Movement provides athletic training programs, coach-led sessions, an
               instructional video library, equipment hire, and related services in Nairobi,
               Kenya, for individual athletes, families, and partner institutions (such as
               schools).
@@ -63,7 +63,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-semibold text-on-surface mb-2">4. Institutional Partnerships</h2>
             <p>
               Schools and other institutions may enter into a separate written partnership
-              agreement with Labatts Movement, provided at no charge as described in that
+              agreement with Tuistech Movement, provided at no charge as described in that
               agreement. Institutional agreements are governed by their own specific terms in
               addition to these Terms of Service.
             </p>
@@ -72,7 +72,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-on-surface mb-2">5. Equipment Hire</h2>
             <p>
-              Equipment hired through Labatts Movement remains our property. You are responsible
+              Equipment hired through Tuistech Movement remains our property. You are responsible
               for the equipment for the duration of the hire period and agree to return it in
               the condition it was provided, ordinary wear and tear excepted. Loss or damage
               beyond ordinary wear and tear may be charged to the hiring party.
@@ -85,7 +85,7 @@ export default function TermsPage() {
               Athletic training carries an inherent risk of injury. By booking a session, you
               acknowledge this risk on behalf of yourself or the athlete you are registering.
               Coaches will take reasonable safety precautions, including appropriate warm-ups and
-              age-appropriate program design, but Labatts Movement cannot guarantee against
+              age-appropriate program design, but Tuistech Movement cannot guarantee against
               injury. If an athlete has a pre-existing medical condition relevant to physical
               training, please inform your coach before the session begins.
             </p>
@@ -103,7 +103,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-on-surface mb-2">8. Limitation of Liability</h2>
             <p>
-              To the extent permitted by Kenyan law, Labatts Movement&apos;s liability for any
+              To the extent permitted by Kenyan law, Tuistech Movement&apos;s liability for any
               claim arising from your use of the Services is limited to the amount you paid for
               the specific session or service giving rise to the claim. We are not liable for
               indirect, incidental, or consequential damages.

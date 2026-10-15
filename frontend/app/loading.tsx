@@ -50,7 +50,7 @@ export default function Loading() {
         className="text-xs text-outline tracking-[0.3em]"
         style={{ fontFamily: "Montserrat, sans-serif" }}
       >
-        LABATTS MOVEMENT
+        TUISTECH MOVEMENT
       </p>
 
       <style>{`
