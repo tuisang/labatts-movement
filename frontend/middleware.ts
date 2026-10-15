@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/mpesa/shop-callback(.*)",
   "/api/reviews(.*)",
   "/api/chat(.*)",
+  "/api/coach-status",
   "/api/subscribe(.*)",
   "/api/athlete-chat(.*)",
 ]);

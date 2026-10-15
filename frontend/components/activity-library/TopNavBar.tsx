@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 const navLinks = [
   { label: "Activity Library", href: "/activity-library" },
@@ -20,13 +20,19 @@ export default function TopNavBar() {
   const [signInOpen, setSignInOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { isLoaded, isSignedIn } = useUser();
 
   useEffect(() => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setIsCoach(false);
+      return;
+    }
     fetch("/api/coach-status")
       .then((res) => res.json())
       .then((data) => setIsCoach(Boolean(data.isCoach)))
       .catch(() => setIsCoach(false));
-  }, []);
+  }, [isLoaded, isSignedIn]);
 
   const links = isCoach
     ? [
