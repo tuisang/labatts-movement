@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const navLinks = [
   { label: "Activity Library", href: "/activity-library" },
@@ -16,6 +17,7 @@ export default function TopNavBar() {
   const [searchValue, setSearchValue] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -92,6 +94,40 @@ export default function TopNavBar() {
               className="bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant w-48"
             />
           </div>
+          <SignedOut>
+            <div className="relative hidden sm:block">
+              <button
+                onClick={() => setSignInOpen((p) => !p)}
+                className="flex items-center gap-1 px-3 py-2.5 rounded-lg font-label-md text-label-md text-primary border border-primary hover:bg-surface-container transition-colors whitespace-nowrap"
+              >
+                Sign In
+                <span className="material-symbols-outlined text-[18px]">expand_more</span>
+              </button>
+              {signInOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-lg bg-surface shadow-lg border border-outline-variant/40 overflow-hidden">
+                  <SignInButton mode="modal" forceRedirectUrl="/dashboard/coach">
+                    <button
+                      onClick={() => setSignInOpen(false)}
+                      className="w-full text-left px-4 py-3 font-label-md text-label-md text-on-surface hover:bg-surface-container"
+                    >
+                      Coach
+                    </button>
+                  </SignInButton>
+                  <SignInButton mode="modal" forceRedirectUrl="/parent-portal">
+                    <button
+                      onClick={() => setSignInOpen(false)}
+                      className="w-full text-left px-4 py-3 font-label-md text-label-md text-on-surface hover:bg-surface-container"
+                    >
+                      Parent
+                    </button>
+                  </SignInButton>
+                </div>
+              )}
+            </div>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
           <Link
             href="/book-session"
             className="bg-primary text-on-primary px-3.5 sm:px-5 py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors whitespace-nowrap"
@@ -126,6 +162,27 @@ export default function TopNavBar() {
               className="bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant flex-1"
             />
           </div>
+
+          <SignedOut>
+            <div className="flex gap-2">
+              <SignInButton mode="modal" forceRedirectUrl="/dashboard/coach">
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 px-4 py-3 rounded-lg border border-primary text-primary font-label-md text-label-md"
+                >
+                  Coach Sign In
+                </button>
+              </SignInButton>
+              <SignInButton mode="modal" forceRedirectUrl="/parent-portal">
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 px-4 py-3 rounded-lg border border-primary text-primary font-label-md text-label-md"
+                >
+                  Parent Sign In
+                </button>
+              </SignInButton>
+            </div>
+          </SignedOut>
 
           <nav className="flex flex-col gap-1">
             {links.map((link) => {
