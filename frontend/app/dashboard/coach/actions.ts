@@ -23,6 +23,7 @@ export async function addProgressEntry(formData: FormData) {
   });
 
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
 }
 
 export async function updateBookingStatus(bookingId: string, status: string) {
@@ -34,6 +35,7 @@ export async function updateBookingStatus(bookingId: string, status: string) {
   });
 
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
 }
 
 const DEFAULT_CONTRACT_TEMPLATE = (schoolName: string, program: string) => `
@@ -70,6 +72,7 @@ export async function generateContract(bookingId: string) {
   });
 
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
 }
 
 // ─── New: content management ───
@@ -129,6 +132,7 @@ export async function seedDefaultContent() {
   }
 
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/book-session");
   revalidatePath("/equipment-hire");
 }
@@ -145,6 +149,7 @@ export async function addSessionOption(formData: FormData) {
   await prisma.sessionOption.create({ data: { name, duration, price } });
 
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/book-session");
 }
 
@@ -152,6 +157,7 @@ export async function toggleSessionActive(id: string, active: boolean) {
   if (!(await isCoach())) throw new Error("Not authorized");
   await prisma.sessionOption.update({ where: { id }, data: { active } });
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/book-session");
 }
 
@@ -159,6 +165,7 @@ export async function deleteSessionOption(id: string) {
   if (!(await isCoach())) throw new Error("Not authorized");
   await prisma.sessionOption.delete({ where: { id } });
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/book-session");
 }
 
@@ -180,6 +187,7 @@ export async function addEquipmentItem(formData: FormData) {
   });
 
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/equipment-hire");
 }
 
@@ -187,6 +195,7 @@ export async function toggleEquipmentAvailable(id: string, available: boolean) {
   if (!(await isCoach())) throw new Error("Not authorized");
   await prisma.equipmentItem.update({ where: { id }, data: { available } });
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/equipment-hire");
 }
 
@@ -194,5 +203,6 @@ export async function deleteEquipmentItem(id: string) {
   if (!(await isCoach())) throw new Error("Not authorized");
   await prisma.equipmentItem.delete({ where: { id } });
   revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
   revalidatePath("/equipment-hire");
 }

@@ -255,6 +255,14 @@ export default function AdminPage() {
               {t}
             </button>
           ))}
+          <a
+            href="/admin/catalog"
+            className="ml-auto px-6 py-2 text-xs tracking-widest uppercase bg-primary text-on-primary hover:bg-primary-container transition-all flex items-center gap-2"
+            style={{ fontFamily: "Libre Franklin, sans-serif" }}
+          >
+            <span className="material-symbols-outlined text-[16px]">add</span>
+            Add Items
+          </a>
         </div>
 
         {isLoading && (

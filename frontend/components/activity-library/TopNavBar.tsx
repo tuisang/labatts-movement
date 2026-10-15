@@ -19,6 +19,7 @@ const coachLinks: NavLink[] = [
   { label: "Dashboard", href: "/dashboard/coach", icon: "dashboard" },
   { label: "Media Hub", href: "/dashboard/media-hub", icon: "video_library" },
   { label: "Admin", href: "/admin", icon: "admin_panel_settings" },
+  { label: "Add Items", href: "/admin/catalog", icon: "add_box" },
 ];
 
 const baseLink =
