@@ -27,7 +27,6 @@ const activeLink = "bg-primary/10 text-primary font-bold";
 const idleLink = "text-secondary font-medium hover:bg-surface-container hover:text-primary";
 
 export default function TopNavBar() {
-  const [searchFocused, setSearchFocused] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
@@ -164,30 +163,10 @@ export default function TopNavBar() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <div
-            className={`hidden 2xl:flex items-center gap-2 bg-surface-container rounded-full px-4 py-2 transition-all ${
-              searchFocused ? "ring-2 ring-primary" : ""
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px] text-on-surface-variant">
-              search
-            </span>
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={handleSearchSubmit}
-              placeholder="Search training videos..."
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              className="bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant w-44"
-            />
-          </div>
-
           <button
             onClick={() => setSearchOpen((p) => !p)}
             aria-label="Search training videos"
-            className="hidden sm:inline-flex 2xl:hidden items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors"
+            className="hidden sm:inline-flex items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors"
           >
             <span className="material-symbols-outlined text-[22px]">
               {searchOpen ? "close" : "search"}
@@ -282,7 +261,7 @@ export default function TopNavBar() {
 
       {/* Search panel (shown when the search icon is clicked) */}
       {searchOpen && (
-        <div className="hidden sm:block 2xl:hidden border-t border-outline-variant/40 bg-surface">
+        <div className="hidden sm:block border-t border-outline-variant/40 bg-surface">
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-3">
             <div className="flex items-center gap-2 bg-surface-container rounded-full px-4 py-2.5 ring-2 ring-primary/40">
               <span className="material-symbols-outlined text-[20px] text-on-surface-variant">
