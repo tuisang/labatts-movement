@@ -27,7 +27,11 @@ export default function TopNavBar() {
   }, []);
 
   const links = isCoach
-    ? [...navLinks, { label: "Media Hub", href: "/dashboard/media-hub" }]
+    ? [
+        ...navLinks,
+        { label: "Media Hub", href: "/dashboard/media-hub" },
+        { label: "Admin", href: "/admin" },
+      ]
     : navLinks;
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
