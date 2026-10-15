@@ -156,6 +156,19 @@ export async function setActivityVideoStatus(
   revalidatePath("/activity-library");
 }
 
+export async function publishAllDraftVideos(): Promise<number> {
+  if (!(await isCoach())) throw new Error("Not authorized");
+
+  const result = await prisma.activityVideo.updateMany({
+    where: { status: "draft" },
+    data: { status: "published" },
+  });
+
+  revalidatePath("/dashboard/media-hub");
+  revalidatePath("/activity-library");
+  return result.count;
+}
+
 export async function deleteActivityVideo(id: string) {
   if (!(await isCoach())) throw new Error("Not authorized");
 

@@ -7,6 +7,7 @@ import MediaTable from "@/components/media-hub/MediaTable";
 import UploadVideoModal from "@/components/media-hub/UploadVideoModal";
 import {
   getAllActivityVideosForCoach,
+  publishAllDraftVideos,
   type CoachActivityVideo,
 } from "@/app/activity-library/actions";
 
@@ -15,6 +16,21 @@ export default function MediaHubClient() {
   const [videos, setVideos] = useState<CoachActivityVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const draftCount = videos.filter((v) => v.status === "draft").length;
+
+  const handlePublishAll = async () => {
+    if (!window.confirm(`Publish ${draftCount} draft video${draftCount === 1 ? "" : "s"} to the Activity Library?`)) return;
+    setPublishing(true);
+    try {
+      await publishAllDraftVideos();
+      refresh();
+    } catch {
+      window.alert("Could not publish the videos. Please try again.");
+    } finally {
+      setPublishing(false);
+    }
+  };
 
   const refresh = useCallback(() => {
     setLoading(true);
@@ -42,6 +58,17 @@ export default function MediaHubClient() {
               instructional content.
             </p>
           </div>
+          <div className="flex flex-wrap gap-3">
+          {draftCount > 0 && (
+            <button
+              onClick={handlePublishAll}
+              disabled={publishing}
+              className="flex items-center gap-2 border border-primary text-primary px-5 py-3 rounded-lg font-label-md whitespace-nowrap hover:bg-primary/10 transition-colors disabled:opacity-60"
+            >
+              <span className="material-symbols-outlined text-[18px]">publish</span>
+              {publishing ? "Publishing…" : `Publish all drafts (${draftCount})`}
+            </button>
+          )}
           <button
             onClick={() => setShowUpload(true)}
             className="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-lg font-label-md whitespace-nowrap hover:bg-primary-container transition-colors"
@@ -49,6 +76,7 @@ export default function MediaHubClient() {
             <span className="material-symbols-outlined text-[18px]">add_circle</span>
             Upload New Media
           </button>
+          </div>
         </div>
 
         <MediaHubStats />
