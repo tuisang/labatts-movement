@@ -1,9 +1,12 @@
+import { LogoMark } from "@/components/Logo";
+
 export default function Footer() {
   return (
     <footer className="w-full py-16 px-margin-mobile md:px-margin-desktop mt-20 border-t border-outline-variant bg-inverse-surface">
       <div className="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
         <div className="max-w-xs">
-          <h2 className="font-headline-md text-headline-md text-primary-fixed mb-4">
+          <h2 className="flex items-center gap-2.5 font-headline-md text-headline-md text-primary-fixed mb-4">
+            <LogoMark size={36} />
             Tuistech Movement
           </h2>
           <p className="text-surface-container-highest font-body-md">

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { LogoMark } from "@/components/Logo";
 
 type NavLink = { label: string; href: string; icon: string };
 
@@ -31,7 +32,10 @@ export default function TopNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
   const [signInOpen, setSignInOpen] = useState(false);
+  const [coachOpen, setCoachOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const signInRef = useRef<HTMLDivElement>(null);
+  const coachRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { isLoaded, isSignedIn } = useUser();
@@ -48,16 +52,19 @@ export default function TopNavBar() {
       .catch(() => setIsCoach(false));
   }, [isLoaded, isSignedIn]);
 
-  // Close the sign-in dropdown on outside click or Escape
+  // Close dropdowns on outside click or Escape
   useEffect(() => {
-    if (!signInOpen) return;
+    if (!signInOpen && !coachOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (signInRef.current && !signInRef.current.contains(e.target as Node)) {
-        setSignInOpen(false);
-      }
+      const t = e.target as Node;
+      if (signInRef.current && !signInRef.current.contains(t)) setSignInOpen(false);
+      if (coachRef.current && !coachRef.current.contains(t)) setCoachOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSignInOpen(false);
+      if (e.key === "Escape") {
+        setSignInOpen(false);
+        setCoachOpen(false);
+      }
     };
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
@@ -65,11 +72,12 @@ export default function TopNavBar() {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKey);
     };
-  }, [signInOpen]);
+  }, [signInOpen, coachOpen]);
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchValue.trim()) {
       setMobileMenuOpen(false);
+      setSearchOpen(false);
       router.push(`/activity-library?search=${encodeURIComponent(searchValue.trim())}`);
     }
   };
@@ -81,14 +89,18 @@ export default function TopNavBar() {
       <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-16 gap-4">
         <div className="flex items-center gap-6 min-w-0">
           <Link
-            className="font-headline-md text-headline-md font-bold text-primary whitespace-nowrap"
+            className="flex items-center gap-2.5 shrink-0"
             href="/"
             onClick={() => setMobileMenuOpen(false)}
+            aria-label="Tuistech Movement home"
           >
-            Tuistech Movement
+            <LogoMark size={38} />
+            <span className="font-headline-md text-headline-md font-bold text-primary whitespace-nowrap leading-none">
+              Tuistech Movement
+            </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -100,30 +112,60 @@ export default function TopNavBar() {
             ))}
 
             {isCoach && (
-              <>
-                <span className="mx-2 h-6 w-px bg-outline-variant/60" aria-hidden />
-                {coachLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`${baseLink} ${
-                      isActive(link.href)
-                        ? "bg-primary text-on-primary font-bold"
-                        : "text-primary font-medium bg-primary/5 hover:bg-primary/15"
+              <div className="relative ml-2 pl-3 border-l border-outline-variant/60" ref={coachRef}>
+                <button
+                  onClick={() => setCoachOpen((p) => !p)}
+                  aria-haspopup="menu"
+                  aria-expanded={coachOpen}
+                  className={`${baseLink} ${
+                    coachLinks.some((l) => isActive(l.href))
+                      ? "bg-primary text-on-primary font-bold"
+                      : "text-primary font-semibold bg-primary/10 hover:bg-primary/20"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[18px]">shield_person</span>
+                  Coach
+                  <span
+                    className={`material-symbols-outlined text-[18px] transition-transform ${
+                      coachOpen ? "rotate-180" : ""
                     }`}
                   >
-                    <span className="material-symbols-outlined text-[18px]">{link.icon}</span>
-                    {link.label}
-                  </Link>
-                ))}
-              </>
+                    expand_more
+                  </span>
+                </button>
+                {coachOpen && (
+                  <div
+                    role="menu"
+                    className="absolute left-3 mt-2 w-56 rounded-2xl bg-surface shadow-xl border border-outline-variant/40 p-2"
+                  >
+                    {coachLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        role="menuitem"
+                        onClick={() => setCoachOpen(false)}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 font-label-md text-label-md transition-colors ${
+                          isActive(link.href)
+                            ? "bg-primary/10 text-primary font-bold"
+                            : "text-on-surface hover:bg-surface-container"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-primary text-[20px]">
+                          {link.icon}
+                        </span>
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </nav>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
           <div
-            className={`hidden xl:flex items-center gap-2 bg-surface-container rounded-full px-4 py-2 transition-all ${
+            className={`hidden 2xl:flex items-center gap-2 bg-surface-container rounded-full px-4 py-2 transition-all ${
               searchFocused ? "ring-2 ring-primary" : ""
             }`}
           >
@@ -141,6 +183,16 @@ export default function TopNavBar() {
               className="bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant w-44"
             />
           </div>
+
+          <button
+            onClick={() => setSearchOpen((p) => !p)}
+            aria-label="Search training videos"
+            className="hidden sm:inline-flex 2xl:hidden items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors"
+          >
+            <span className="material-symbols-outlined text-[22px]">
+              {searchOpen ? "close" : "search"}
+            </span>
+          </button>
 
           <SignedOut>
             <div className="relative hidden sm:block" ref={signInRef}>
@@ -218,7 +270,7 @@ export default function TopNavBar() {
           </Link>
           <button
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="lg:hidden text-on-surface p-1 rounded-full hover:bg-surface-container"
+            className="xl:hidden text-on-surface p-1 rounded-full hover:bg-surface-container"
             aria-label="Toggle menu"
           >
             <span className="material-symbols-outlined text-[26px]">
@@ -228,9 +280,31 @@ export default function TopNavBar() {
         </div>
       </div>
 
+      {/* Search panel (shown when the search icon is clicked) */}
+      {searchOpen && (
+        <div className="hidden sm:block 2xl:hidden border-t border-outline-variant/40 bg-surface">
+          <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-3">
+            <div className="flex items-center gap-2 bg-surface-container rounded-full px-4 py-2.5 ring-2 ring-primary/40">
+              <span className="material-symbols-outlined text-[20px] text-on-surface-variant">
+                search
+              </span>
+              <input
+                autoFocus
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleSearchSubmit}
+                placeholder="Search training videos and press Enter..."
+                className="bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant flex-1"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile / tablet menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-outline-variant/40 bg-surface px-margin-mobile py-4 flex flex-col gap-4">
+        <div className="xl:hidden border-t border-outline-variant/40 bg-surface px-margin-mobile py-4 flex flex-col gap-4">
           <div className="flex items-center gap-2 bg-surface-container rounded-full px-4 py-2.5">
             <span className="material-symbols-outlined text-[20px] text-on-surface-variant">
               search
