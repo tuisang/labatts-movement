@@ -4,6 +4,7 @@ import { useState } from "react";
 import { setActivityVideoStatus, deleteActivityVideo } from "@/app/activity-library/actions";
 import { formatViews } from "@/components/activity-library/types";
 import type { CoachActivityVideo } from "@/app/activity-library/actions";
+import EditVideoModal from "@/components/media-hub/EditVideoModal";
 
 type Status = "draft" | "published" | "archived";
 
@@ -29,6 +30,7 @@ export default function MediaTable({
 }) {
   const [activeTab, setActiveTab] = useState<Status | "all">("all");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<CoachActivityVideo | null>(null);
 
   const filtered = videos.filter((v) => activeTab === "all" || v.status === activeTab);
 
@@ -132,6 +134,13 @@ export default function MediaTable({
                   </td>
                   <td className="px-5 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <button
+                        disabled={busyId === item.id}
+                        onClick={() => setEditing(item)}
+                        className="text-xs font-medium text-on-surface hover:underline disabled:opacity-50"
+                      >
+                        Edit
+                      </button>
                       {item.status !== "published" && (
                         <button
                           disabled={busyId === item.id}
@@ -165,6 +174,16 @@ export default function MediaTable({
           </tbody>
         </table>
       </div>
+      {editing && (
+        <EditVideoModal
+          video={editing}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null);
+            onChanged();
+          }}
+        />
+      )}
     </div>
   );
 }

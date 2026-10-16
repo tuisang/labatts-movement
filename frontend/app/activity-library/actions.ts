@@ -169,6 +169,57 @@ export async function publishAllDraftVideos(): Promise<number> {
   return result.count;
 }
 
+export interface UpdateActivityVideoInput {
+  title: string;
+  description: string;
+  difficulty: Difficulty;
+  ageGroup: string;
+  coach: string;
+  setting: Setting;
+  equipment: string[];
+  // A custom https image URL, or "reset" to go back to the video's first frame.
+  thumbnail?: string;
+}
+
+export async function updateActivityVideo(id: string, input: UpdateActivityVideoInput) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+
+  if (!input.title.trim()) throw new Error("Title is required.");
+
+  const existing = await prisma.activityVideo.findUnique({ where: { id } });
+  if (!existing) throw new Error("Video not found.");
+
+  let thumbnailUrl: string | undefined;
+  if (input.thumbnail === "reset") {
+    thumbnailUrl = existing.videoUrl
+      .replace("/video/upload/", "/video/upload/so_0/")
+      .replace(/\.[^./]+$/, ".jpg");
+  } else if (input.thumbnail) {
+    const url = input.thumbnail.trim().replace(/^http:\/\//i, "https://");
+    if (!/^https:\/\/\S+$/i.test(url)) throw new Error("Thumbnail must be an https link.");
+    thumbnailUrl = url;
+  }
+
+  await prisma.activityVideo.update({
+    where: { id },
+    data: {
+      title: input.title.trim(),
+      description: input.description.trim(),
+      difficulty: input.difficulty,
+      ageGroup: input.ageGroup,
+      coach: input.coach.trim(),
+      setting: input.setting,
+      equipment: input.equipment,
+      ...(thumbnailUrl ? { thumbnailUrl } : {}),
+    },
+  });
+
+  revalidatePath("/dashboard/media-hub");
+  revalidatePath("/activity-library");
+  revalidatePath(`/activity-library/${id}`);
+  revalidatePath("/");
+}
+
 export async function deleteActivityVideo(id: string) {
   if (!(await isCoach())) throw new Error("Not authorized");
 
