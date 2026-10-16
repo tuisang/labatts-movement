@@ -38,15 +38,9 @@ export default function Footer() {
             </h4>
             <a
               className="text-surface-container-highest font-label-sm hover:text-primary-fixed-dim transition-colors"
-              href="#"
+              href="/contact"
             >
               Contact Us
-            </a>
-            <a
-              className="text-surface-container-highest font-label-sm hover:text-primary-fixed-dim transition-colors"
-              href="#"
-            >
-              Newsletter
             </a>
           </div>
           <div className="flex flex-col gap-3">

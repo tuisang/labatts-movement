@@ -13,19 +13,21 @@ const transporter = nodemailer.createTransport({
 const FROM_EMAIL = process.env.SMTP_USER ?? "info@tuistech.co.ke";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "info@tuistech.co.ke";
 
-async function sendEmail(to: string, subject: string, html: string) {
+async function sendEmail(to: string, subject: string, html: string, replyTo?: string): Promise<boolean> {
   try {
     console.log(`📧 Sending email to ${to} via ${process.env.SMTP_HOST}:${process.env.SMTP_PORT} as ${process.env.SMTP_USER}`);
     const info = await transporter.sendMail({
   from: `"Tuistech Movement" <${FROM_EMAIL}>`,
-  replyTo: ADMIN_EMAIL,
+  replyTo: replyTo ?? ADMIN_EMAIL,
   to,
   subject,
   html,
 });
     console.log(`✅ Email sent: ${info.messageId}`);
+    return true;
   } catch (error) {
     console.error("❌ Email send error:", error);
+    return false;
   }
 }
 
@@ -123,4 +125,39 @@ function bookingAdminHtml(d: { clientName: string; clientEmail: string; service:
       </table>
       ${ctaButton(`${process.env.NEXT_PUBLIC_APP_URL ?? "https://labattsmovement.tuistech.co.ke"}/dashboard/coach`, "OPEN DASHBOARD &rarr;")}
     </td></tr>`);
+}
+
+const escapeHtml = (v: string) =>
+  v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}
+
+// Returns false if the email could not be sent, so the form can tell the visitor.
+export async function sendContactFormEmail(data: ContactFormData): Promise<boolean> {
+  const name = escapeHtml(data.name);
+  const email = escapeHtml(data.email);
+  const phone = escapeHtml(data.phone || "Not provided");
+  const message = escapeHtml(data.message);
+
+  const html = wrap(`
+    ${headerHtml("NEW CONTACT MESSAGE")}
+    <tr><td style="background:#ffffff;padding:36px 40px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef8f1;border:1px solid #e0c0af;margin-bottom:20px;">
+        ${detailRow("NAME", name)}
+        ${detailRow("EMAIL", email)}
+        ${detailRow("PHONE", phone)}
+      </table>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef8f1;border:1px solid #e0c0af;margin-bottom:20px;">
+        <tr><td style="padding:16px 20px;color:#1d1b17;white-space:pre-wrap;">${message}</td></tr>
+      </table>
+      ${ctaButton(`mailto:${email}`, "REPLY TO " + name.toUpperCase())}
+    </td></tr>`);
+
+  // Reply-To is the visitor, so hitting Reply in the inbox answers them directly.
+  return sendEmail(ADMIN_EMAIL, `New Contact Message – ${data.name.slice(0, 60)}`, html, data.email);
 }
