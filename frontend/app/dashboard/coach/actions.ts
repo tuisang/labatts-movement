@@ -174,12 +174,19 @@ export async function addEquipmentItem(formData: FormData) {
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  const imageUrl = formData.get("imageUrl") as string;
+  let imageUrl = ((formData.get("imageUrl") as string) ?? "").trim();
   const pricePerDay = Number(formData.get("pricePerDay"));
   const category = formData.get("category") as string;
 
   if (!name || !description || !imageUrl || !pricePerDay || !category) {
     throw new Error("All fields are required");
+  }
+
+  // Normalise the image link so it always loads on the https site.
+  if (imageUrl.startsWith("//")) imageUrl = `https:${imageUrl}`;
+  imageUrl = imageUrl.replace(/^http:\/\//i, "https://");
+  if (!/^https:\/\/\S+$/i.test(imageUrl)) {
+    throw new Error("Image URL must be a valid web link starting with https://");
   }
 
   await prisma.equipmentItem.create({

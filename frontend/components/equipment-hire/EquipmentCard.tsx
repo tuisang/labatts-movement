@@ -1,23 +1,13 @@
 "use client";
 
 import { EquipmentItem } from "./equipmentCatalog";
+import EquipmentImage from "./EquipmentImage";
 
 export default function EquipmentCard({ item }: { item: EquipmentItem }) {
   return (
     <div className="bg-surface-container-lowest rounded-xl overflow-hidden video-card-shadow flex flex-col">
       <div className="relative aspect-video">
-        {item.imageUrl ? (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('${item.imageUrl}')` }}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-surface-container flex items-center justify-center">
-            <span className="material-symbols-outlined text-[40px] text-on-surface-variant">
-              fitness_center
-            </span>
-          </div>
-        )}
+        <EquipmentImage src={item.imageUrl} alt={item.name} className="absolute inset-0 w-full h-full" />
         {!item.available && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <span className="bg-error text-on-error text-xs font-bold uppercase tracking-wider px-3 py-1 rounded">

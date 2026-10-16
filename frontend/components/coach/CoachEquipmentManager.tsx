@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
+import EquipmentImage from "@/components/equipment-hire/EquipmentImage";
 import { addEquipmentItem, toggleEquipmentAvailable, deleteEquipmentItem } from "@/app/dashboard/coach/actions";
 
 interface EquipmentItemData {
@@ -16,6 +17,8 @@ interface EquipmentItemData {
 export default function CoachEquipmentManager({ items }: { items: EquipmentItemData[] }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
+  const [imageUrl, setImageUrl] = useState("");
+  const [error, setError] = useState("");
 
   return (
     <div className="bg-surface-container-lowest rounded-xl p-6 video-card-shadow">
@@ -25,13 +28,20 @@ export default function CoachEquipmentManager({ items }: { items: EquipmentItemD
             key={item.id}
             className="flex items-center justify-between border-b border-outline-variant/30 pb-2"
           >
-            <div>
+            <div className="flex items-center gap-3">
+              <EquipmentImage
+                src={item.imageUrl}
+                alt={item.name}
+                className="w-12 h-12 rounded-lg shrink-0"
+              />
+              <div>
               <p className={`text-sm font-medium ${item.available ? "text-on-surface" : "text-on-surface-variant line-through"}`}>
                 {item.name}
               </p>
               <p className="text-xs text-on-surface-variant">
                 {item.category} • KSh {item.pricePerDay}/day
               </p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -61,8 +71,14 @@ export default function CoachEquipmentManager({ items }: { items: EquipmentItemD
       <form
         ref={formRef}
         action={async (formData) => {
-          await addEquipmentItem(formData);
-          formRef.current?.reset();
+          setError("");
+          try {
+            await addEquipmentItem(formData);
+            formRef.current?.reset();
+            setImageUrl("");
+          } catch (e) {
+            setError(e instanceof Error ? e.message : "Could not add the item.");
+          }
         }}
         className="grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-outline-variant/30 pt-4"
       >
@@ -84,12 +100,34 @@ export default function CoachEquipmentManager({ items }: { items: EquipmentItemD
           required
           className="border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary sm:col-span-2"
         />
-        <input
-          name="imageUrl"
-          placeholder="Image URL"
-          required
-          className="border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary sm:col-span-2"
-        />
+        <div className="sm:col-span-2 flex flex-col gap-2">
+          <input
+            name="imageUrl"
+            type="url"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Image URL (a direct link to the photo, e.g. https://…/photo.jpg)"
+            required
+            className="border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          {imageUrl.trim() ? (
+            <div className="flex items-center gap-3">
+              <EquipmentImage
+                src={imageUrl.trim()}
+                alt="Preview"
+                className="w-28 h-20 rounded-lg border border-outline-variant"
+              />
+              <p className="text-xs text-on-surface-variant">
+                Preview. If you see a broken-image icon, the link isn&apos;t a direct image — right-click
+                the photo and choose &ldquo;Copy image address&rdquo;.
+              </p>
+            </div>
+          ) : (
+            <p className="text-xs text-on-surface-variant">
+              Tip: right-click a photo online and choose &ldquo;Copy image address&rdquo;, then paste it here.
+            </p>
+          )}
+        </div>
         <input
           name="pricePerDay"
           type="number"
@@ -103,6 +141,7 @@ export default function CoachEquipmentManager({ items }: { items: EquipmentItemD
         >
           Add Equipment
         </button>
+        {error && <p className="text-error text-sm sm:col-span-2">{error}</p>}
       </form>
     </div>
   );
