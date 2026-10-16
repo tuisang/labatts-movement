@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
+import VideoPlayer from "@/components/video-detail/VideoPlayer";
 import { difficultyBadgeClasses, formatViews } from "@/components/activity-library/types";
 import {
   getPublishedActivityVideoById,
@@ -44,21 +45,7 @@ export default async function VideoDetailPage({
           </a>
         </div>
 
-        <div className="relative aspect-video rounded-xl overflow-hidden bg-inverse-surface mb-8">
-          <video
-            className="absolute inset-0 w-full h-full object-contain bg-black"
-            src={video.videoUrl}
-            poster={video.thumbnailUrl}
-            controls
-            playsInline
-            preload="metadata"
-          >
-            Your browser does not support video playback.
-          </video>
-          <span className="absolute bottom-3 right-3 bg-black/80 text-white text-label-sm px-2 py-1 rounded pointer-events-none">
-            {video.duration}
-          </span>
-        </div>
+        <VideoPlayer videoUrl={video.videoUrl} poster={video.thumbnailUrl} duration={video.duration} />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="md:col-span-2 bg-surface-container-lowest rounded-xl p-6 video-card-shadow">
