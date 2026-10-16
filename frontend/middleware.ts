@@ -12,6 +12,7 @@ const isPublicRoute = createRouteMatcher([
   "/privacy",
   "/contact",
   "/api/contact",
+  "/api/equipment-request",
   "/dashboard(.*)",
   "/api/mpesa/callback(.*)",
   "/api/coach-status",

@@ -161,3 +161,49 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<boole
   // Reply-To is the visitor, so hitting Reply in the inbox answers them directly.
   return sendEmail(ADMIN_EMAIL, `New Contact Message – ${data.name.slice(0, 60)}`, html, data.email);
 }
+
+// ─── Equipment hire requests ───
+
+interface HireRequestData {
+  itemName: string;
+  pricePerDay: number;
+  quantity: number;
+  startDate: string;
+  endDate: string;
+  days: number;
+  estimatedTotal: number;
+  name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+}
+
+// Returns false if the email could not be sent.
+export async function sendHireRequestEmail(d: HireRequestData): Promise<boolean> {
+  const html = wrap(`
+    ${headerHtml("NEW EQUIPMENT HIRE REQUEST")}
+    <tr><td style="background:#ffffff;padding:36px 40px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef8f1;border:1px solid #e0c0af;margin-bottom:20px;">
+        ${detailRow("ITEM", escapeHtml(d.itemName))}
+        ${detailRow("QUANTITY", String(d.quantity))}
+        ${detailRow("FROM", escapeHtml(d.startDate))}
+        ${detailRow("TO", escapeHtml(d.endDate))}
+        ${detailRow("DAYS", String(d.days))}
+        ${detailRow("ESTIMATE", `KSh ${d.estimatedTotal.toLocaleString()} (KSh ${d.pricePerDay.toLocaleString()}/day)`)}
+      </table>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef8f1;border:1px solid #e0c0af;margin-bottom:20px;">
+        ${detailRow("NAME", escapeHtml(d.name))}
+        ${detailRow("EMAIL", escapeHtml(d.email))}
+        ${detailRow("PHONE", escapeHtml(d.phone))}
+        ${detailRow("NOTES", escapeHtml(d.notes || "None"))}
+      </table>
+      ${ctaButton(`mailto:${encodeURIComponent(d.email)}`, "REPLY TO " + escapeHtml(d.name.toUpperCase()))}
+    </td></tr>`);
+
+  return sendEmail(
+    ADMIN_EMAIL,
+    `Hire request – ${d.itemName} (${d.startDate} to ${d.endDate})`.replace(/[\r\n]+/g, " "),
+    html,
+    d.email
+  );
+}

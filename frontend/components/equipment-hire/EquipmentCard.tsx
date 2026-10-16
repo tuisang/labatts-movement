@@ -1,9 +1,12 @@
 "use client";
 
 import { EquipmentItem } from "./equipmentCatalog";
+import { useState } from "react";
 import EquipmentImage from "./EquipmentImage";
+import HireRequestModal from "./HireRequestModal";
 
 export default function EquipmentCard({ item }: { item: EquipmentItem }) {
+  const [open, setOpen] = useState(false);
   return (
     <div className="bg-surface-container-lowest rounded-xl overflow-hidden video-card-shadow flex flex-col">
       <div className="relative aspect-video">
@@ -28,16 +31,12 @@ export default function EquipmentCard({ item }: { item: EquipmentItem }) {
             <span className="text-xs text-on-surface-variant font-normal">/day</span>
           </span>
           {item.available ? (
-            <a
-              href={`mailto:info@tuistech.co.ke?subject=${encodeURIComponent(
-                `Equipment Hire Request: ${item.name}`
-              )}&body=${encodeURIComponent(
-                `Hi Tuistech Movement,\n\nI'd like to request hire of the ${item.name} (KSh ${item.pricePerDay}/day). Please let me know availability and next steps.\n\nThanks!`
-              )}`}
+            <button
+              onClick={() => setOpen(true)}
               className="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-label-md hover:bg-primary-container transition-colors"
             >
               Request to Hire
-            </a>
+            </button>
           ) : (
             <button
               disabled
@@ -48,6 +47,7 @@ export default function EquipmentCard({ item }: { item: EquipmentItem }) {
           )}
         </div>
       </div>
+      {open && <HireRequestModal item={item} onClose={() => setOpen(false)} />}
     </div>
   );
 }
