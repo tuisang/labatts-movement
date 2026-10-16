@@ -2,7 +2,8 @@
 
 import { useRef, useState, useTransition } from "react";
 import EquipmentImage from "@/components/equipment-hire/EquipmentImage";
-import { addEquipmentItem, toggleEquipmentAvailable, deleteEquipmentItem } from "@/app/dashboard/coach/actions";
+import ImageUploadButton from "@/components/coach/ImageUploadButton";
+import { addEquipmentItem, toggleEquipmentAvailable, deleteEquipmentItem, updateEquipmentImage } from "@/app/dashboard/coach/actions";
 
 interface EquipmentItemData {
   id: string;
@@ -43,7 +44,11 @@ export default function CoachEquipmentManager({ items }: { items: EquipmentItemD
               </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <ImageUploadButton
+                label="Change photo"
+                onUploaded={(url) => updateEquipmentImage(item.id, url)}
+              />
               <button
                 onClick={() =>
                   startTransition(() => toggleEquipmentAvailable(item.id, !item.available))
@@ -110,6 +115,10 @@ export default function CoachEquipmentManager({ items }: { items: EquipmentItemD
             required
             className="border border-outline-variant rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
+          <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+            <span>or</span>
+            <ImageUploadButton label="Upload a photo from your device" onUploaded={(url) => setImageUrl(url)} />
+          </div>
           {imageUrl.trim() ? (
             <div className="flex items-center gap-3">
               <EquipmentImage

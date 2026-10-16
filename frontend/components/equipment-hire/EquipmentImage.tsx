@@ -17,6 +17,11 @@ export default function EquipmentImage({
   className?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  // Serve Cloudinary photos resized and in a modern format.
+  const displaySrc =
+    src.includes("res.cloudinary.com") && src.includes("/image/upload/") && !/\/image\/upload\/[a-z]{1,3}_/.test(src)
+      ? src.replace("/image/upload/", "/image/upload/f_auto,q_auto,w_800/")
+      : src;
 
   useEffect(() => {
     setFailed(false);
@@ -35,7 +40,7 @@ export default function EquipmentImage({
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={src}
+      src={displaySrc}
       alt={alt}
       loading="lazy"
       referrerPolicy="no-referrer"

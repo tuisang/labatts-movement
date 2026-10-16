@@ -198,6 +198,22 @@ export async function addEquipmentItem(formData: FormData) {
   revalidatePath("/equipment-hire");
 }
 
+export async function updateEquipmentImage(id: string, imageUrl: string) {
+  if (!(await isCoach())) throw new Error("Not authorized");
+
+  let url = (imageUrl ?? "").trim();
+  if (url.startsWith("//")) url = `https:${url}`;
+  url = url.replace(/^http:\/\//i, "https://");
+  if (!/^https:\/\/\S+$/i.test(url)) {
+    throw new Error("Image URL must be a valid web link starting with https://");
+  }
+
+  await prisma.equipmentItem.update({ where: { id }, data: { imageUrl: url } });
+  revalidatePath("/dashboard/coach");
+  revalidatePath("/admin/catalog");
+  revalidatePath("/equipment-hire");
+}
+
 export async function toggleEquipmentAvailable(id: string, available: boolean) {
   if (!(await isCoach())) throw new Error("Not authorized");
   await prisma.equipmentItem.update({ where: { id }, data: { available } });
