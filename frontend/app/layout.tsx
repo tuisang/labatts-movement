@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Libre_Franklin } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { CartProvider } from "@/lib/CartContext";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 import AthleteChatbot from "@/components/AthleteChatbot";
@@ -124,12 +123,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <link rel="canonical" href="https://labattsmovement.tuistech.co.ke" />
         </head>
         <body className={`${libreFranklin.variable} bg-background text-on-surface`}>          
-        <CartProvider>
             <Suspense fallback={<Loading />}>
               {children}
             <AthleteChatbot />
             </Suspense>          
-          </CartProvider>
         </body>
       </html>
     </ClerkProvider>
