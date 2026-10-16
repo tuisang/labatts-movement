@@ -12,7 +12,6 @@ import {
 } from "@/app/activity-library/actions";
 
 export default function MediaHubClient() {
-  const [activeNav, setActiveNav] = useState("Media Library");
   const [videos, setVideos] = useState<CoachActivityVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
@@ -45,7 +44,7 @@ export default function MediaHubClient() {
 
   return (
     <div className="flex flex-col md:flex-row gap-10">
-      <MediaHubSidebar active={activeNav} onSelect={setActiveNav} />
+      <MediaHubSidebar onUpload={() => setShowUpload(true)} />
 
       <div className="flex-1">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -79,7 +78,7 @@ export default function MediaHubClient() {
           </div>
         </div>
 
-        <MediaHubStats />
+        <MediaHubStats videos={videos} />
 
         {loading ? (
           <div className="bg-surface-container-lowest rounded-xl p-10 text-center video-card-shadow text-on-surface-variant">
