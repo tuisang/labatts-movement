@@ -27,13 +27,13 @@ export default function Error({
       </div>
 
       <p className="text-xs text-primary tracking-[0.3em] mb-4" style={{ fontFamily: "Montserrat, sans-serif" }}>
-        SYSTEM ERROR
+        SOMETHING WENT WRONG
       </p>
       <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: "Montserrat, sans-serif" }}>
-        Something Went Wrong
+        We Hit a Snag
       </h1>
       <p className="text-outline max-w-md mb-3 leading-relaxed">
-        An unexpected error occurred. Our team has been notified and is working to resolve it.
+        Something unexpected happened, often just a brief connection hiccup. Please try again in a moment. If it keeps happening, contact us.
       </p>
       {error.digest && (
         <p className="text-xs text-[var(--color-outline-variant)] mb-8" style={{ fontFamily: "Montserrat, sans-serif" }}>
