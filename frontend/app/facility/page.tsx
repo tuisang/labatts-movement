@@ -42,7 +42,12 @@ const services = [
 
 export default async function FacilityPage() {
   // Tolerate the table not existing yet (before `prisma db push`) or a sleeping database.
-  const projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } }).catch(() => []);
+  let projects: Awaited<ReturnType<typeof prisma.facilityProject.findMany>> = [];
+  try {
+    projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } });
+  } catch {
+    projects = [];
+  }
 
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">

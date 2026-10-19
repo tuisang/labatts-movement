@@ -36,7 +36,12 @@ export default async function AdminCatalogPage() {
     prisma.equipmentItem.findMany({ orderBy: { createdAt: "asc" } }),
   ]);
 
-  const projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } }).catch(() => null);
+  let projects: Awaited<ReturnType<typeof prisma.facilityProject.findMany>> | null = null;
+  try {
+    projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } });
+  } catch {
+    projects = null;
+  }
 
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
