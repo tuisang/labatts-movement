@@ -11,7 +11,8 @@ type NavLink = { label: string; href: string; icon: string };
 const navLinks: NavLink[] = [
   { label: "Activity Library", href: "/activity-library", icon: "play_circle" },
   { label: "Equipment Hire", href: "/equipment-hire", icon: "fitness_center" },
-  { label: "Facility & Events", href: "/facility-events", icon: "stadium" },
+  { label: "Facility", href: "/facility", icon: "stadium" },
+  { label: "Events", href: "/events", icon: "event" },
   { label: "Schools", href: "/schools", icon: "school" },
   { label: "Parent Portal", href: "/parent-portal", icon: "family_restroom" },
 ];
