@@ -43,6 +43,16 @@ export default async function AdminPage() {
     prisma.sessionOption.count(),
   ]);
 
+  // Tolerate the table not existing yet (before `prisma db push`).
+  let hireRequests: Awaited<ReturnType<typeof prisma.equipmentRequest.findMany>> = [];
+  let hireTableMissing = false;
+  try {
+    hireRequests = await prisma.equipmentRequest.findMany({ orderBy: { createdAt: "desc" } });
+  } catch {
+    hireTableMissing = true;
+  }
+  const pendingHires = hireRequests.filter((r) => r.status === "pending").length;
+
   const pending = bookings.filter((b) => b.status === "pending").length;
 
   const stats = [
@@ -50,6 +60,7 @@ export default async function AdminPage() {
     { label: "Athletes", value: athletes, hint: "registered by parents", icon: "directions_run" },
     { label: "Videos", value: publishedVideos, hint: `${draftVideos} draft`, icon: "play_circle" },
     { label: "Equipment", value: equipment, hint: `${sessions} session options`, icon: "fitness_center" },
+    { label: "Hire requests", value: hireRequests.length, hint: `${pendingHires} pending`, icon: "inventory_2" },
   ];
 
   return (
@@ -64,7 +75,7 @@ export default async function AdminPage() {
           Everything happening across Tuistech Movement, and shortcuts to add new content.
         </p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           {stats.map((s) => (
             <div key={s.label} className="bg-surface-container-lowest rounded-xl p-5 video-card-shadow">
               <span className="material-symbols-outlined text-primary text-[26px]">{s.icon}</span>
@@ -132,6 +143,63 @@ export default async function AdminPage() {
               </tbody>
             </table>
           </div>
+        </section>
+        <section className="mt-12">
+          <h2 className="font-headline-md text-headline-md mb-4">Equipment Hire Requests ({hireRequests.length})</h2>
+          {hireTableMissing ? (
+            <div className="bg-surface-container-lowest rounded-xl p-6 video-card-shadow text-sm text-on-surface-variant">
+              Hire requests aren&apos;t being stored yet. Run <code>npx prisma db push</code> once to create the table.
+            </div>
+          ) : (
+            <div className="bg-surface-container-lowest rounded-xl video-card-shadow overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-outline-variant/40 text-xs text-on-surface-variant uppercase tracking-wider">
+                    <th className="p-4">Customer</th>
+                    <th className="p-4">Item</th>
+                    <th className="p-4">Dates</th>
+                    <th className="p-4">Est. total</th>
+                    <th className="p-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20">
+                  {hireRequests.map((r) => (
+                    <tr key={r.id} className="hover:bg-surface-container/50 align-top">
+                      <td className="p-4">
+                        <p className="font-semibold text-sm">{r.name}</p>
+                        <p className="text-xs text-on-surface-variant">{r.email}</p>
+                        <p className="text-xs text-on-surface-variant">{r.phone}</p>
+                        {r.notes && <p className="text-xs text-on-surface-variant mt-1 max-w-[220px]">&ldquo;{r.notes}&rdquo;</p>}
+                      </td>
+                      <td className="p-4 text-sm">
+                        {r.itemName} <span className="text-on-surface-variant">× {r.quantity}</span>
+                      </td>
+                      <td className="p-4 text-sm">
+                        {r.startDate} → {r.endDate}
+                        <span className="block text-xs text-on-surface-variant">{r.days} day{r.days === 1 ? "" : "s"}</span>
+                      </td>
+                      <td className="p-4 text-sm font-medium">KES {r.estimatedTotal.toLocaleString()}</td>
+                      <td className="p-4">
+                        <BookingStatusSelect
+                          id={r.id}
+                          status={r.status}
+                          endpoint="/api/admin/equipment-requests"
+                          statuses={["pending", "confirmed", "returned", "cancelled"]}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                  {hireRequests.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="p-10 text-center text-on-surface-variant">
+                        No hire requests yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </main>
 

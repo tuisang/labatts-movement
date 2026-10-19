@@ -11,6 +11,8 @@ type NavLink = { label: string; href: string; icon: string };
 const navLinks: NavLink[] = [
   { label: "Activity Library", href: "/activity-library", icon: "play_circle" },
   { label: "Equipment Hire", href: "/equipment-hire", icon: "fitness_center" },
+  { label: "Facility", href: "/facility", icon: "stadium" },
+  { label: "Events", href: "/events", icon: "event" },
   { label: "Schools", href: "/schools", icon: "school" },
   { label: "Parent Portal", href: "/parent-portal", icon: "family_restroom" },
 ];
@@ -23,7 +25,7 @@ const coachLinks: NavLink[] = [
 ];
 
 const baseLink =
-  "inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 font-label-md text-label-md whitespace-nowrap transition-colors duration-200";
+  "inline-flex items-center gap-1.5 rounded-full px-2.5 2xl:px-3.5 py-2 font-label-md text-label-md whitespace-nowrap transition-colors duration-200";
 const activeLink = "bg-primary/10 text-primary font-bold";
 const idleLink = "text-secondary font-medium hover:bg-surface-container hover:text-primary";
 
@@ -100,7 +102,7 @@ export default function TopNavBar() {
             </span>
           </Link>
 
-          <nav className="hidden xl:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

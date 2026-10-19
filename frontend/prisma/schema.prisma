@@ -208,3 +208,23 @@ model ActivityVideo {
 
   @@map("activity_videos")
 }
+
+model EquipmentRequest {
+  id             String   @id @default(cuid())
+  itemId         String
+  itemName       String
+  pricePerDay    Int
+  quantity       Int
+  startDate      String
+  endDate        String
+  days           Int
+  estimatedTotal Int
+  name           String
+  email          String
+  phone          String
+  notes          String   @default("")
+  status         String   @default("pending") // pending | confirmed | returned | cancelled
+  createdAt      DateTime @default(now())
+
+  @@map("equipment_requests")
+}

@@ -62,6 +62,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Sorry, that item isn't available right now." }, { status: 404 });
     }
 
+    const estimatedTotal = item.pricePerDay * days * quantity;
+
+    // Save first so the request is never lost, even if email fails (or the table isn't created yet).
+    let saved = false;
+    try {
+      await prisma.equipmentRequest.create({
+        data: {
+          itemId: item.id,
+          itemName: item.name,
+          pricePerDay: item.pricePerDay,
+          quantity,
+          startDate,
+          endDate,
+          days,
+          estimatedTotal,
+          name,
+          email,
+          phone,
+          notes,
+        },
+      });
+      saved = true;
+    } catch (err) {
+      console.error("Could not save hire request:", err);
+    }
+
     const sent = await sendHireRequestEmail({
       itemName: item.name,
       pricePerDay: item.pricePerDay,
@@ -69,13 +95,13 @@ export async function POST(req: NextRequest) {
       startDate,
       endDate,
       days,
-      estimatedTotal: item.pricePerDay * days * quantity,
+      estimatedTotal,
       name,
       email,
       phone,
       notes,
     });
-    if (!sent) {
+    if (!sent && !saved) {
       return NextResponse.json({ error: "We couldn't send your request. Please try again shortly." }, { status: 502 });
     }
     return NextResponse.json({ success: true });
