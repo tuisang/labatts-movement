@@ -228,3 +228,15 @@ model EquipmentRequest {
 
   @@map("equipment_requests")
 }
+
+model FacilityProject {
+  id          String   @id @default(cuid())
+  title       String
+  category    String // Building | Repair | Maintenance | Competition preparation
+  location    String   @default("")
+  description String   @default("")
+  imageUrl    String
+  createdAt   DateTime @default(now())
+
+  @@map("facility_projects")
+}

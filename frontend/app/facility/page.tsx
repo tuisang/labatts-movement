@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
+import ProjectGallery from "@/components/facility/ProjectGallery";
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Facility Services | Tuistech Movement",
@@ -36,7 +40,10 @@ const services = [
   },
 ];
 
-export default function FacilityPage() {
+export default async function FacilityPage() {
+  // Tolerate the table not existing yet (before `prisma db push`) or a sleeping database.
+  const projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } }).catch(() => []);
+
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
       <TopNavBar />
@@ -74,6 +81,14 @@ export default function FacilityPage() {
             </div>
           ))}
         </div>
+
+        {projects.length > 0 && (
+          <section className="mb-12">
+            <h2 className="font-headline-lg-mobile md:font-headline-md text-headline-md mb-1">Projects we&apos;ve done</h2>
+            <p className="text-on-surface-variant text-sm mb-6">A look at facilities we&apos;ve built, repaired, maintained and prepared.</p>
+            <ProjectGallery projects={projects} />
+          </section>
+        )}
 
         <section className="bg-primary/10 rounded-2xl p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

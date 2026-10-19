@@ -3,6 +3,7 @@ import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 import CoachSessionsManager from "@/components/coach/CoachSessionsManager";
 import CoachEquipmentManager from "@/components/coach/CoachEquipmentManager";
+import FacilityProjectsManager from "@/components/facility/FacilityProjectsManager";
 import SeedDefaultsButton from "@/components/coach/SeedDefaultsButton";
 import { prisma } from "@/lib/prisma";
 import { isCoach } from "@/lib/coachAuth";
@@ -34,6 +35,8 @@ export default async function AdminCatalogPage() {
     prisma.sessionOption.findMany({ orderBy: { createdAt: "asc" } }),
     prisma.equipmentItem.findMany({ orderBy: { createdAt: "asc" } }),
   ]);
+
+  const projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } }).catch(() => null);
 
   return (
     <div className="bg-surface text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
@@ -67,6 +70,19 @@ export default async function AdminCatalogPage() {
               {sessions.length === 0 && <SeedDefaultsButton />}
             </div>
             <CoachSessionsManager sessions={sessions} />
+          </section>
+
+          <section>
+            <h2 className="font-headline-md text-headline-md mb-4">
+              Facility Project Gallery{projects ? ` (${projects.length})` : ""}
+            </h2>
+            {projects ? (
+              <FacilityProjectsManager projects={projects} />
+            ) : (
+              <div className="bg-surface-container-lowest rounded-xl p-6 video-card-shadow text-sm text-on-surface-variant">
+                The gallery table doesn&apos;t exist yet. Run <code>npx prisma db push</code> once to create it.
+              </div>
+            )}
           </section>
 
           <section>
