@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 
@@ -11,6 +11,14 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", website: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState("");
+
+  // Prefill the message when arriving from a service page, e.g. /contact?service=Facility%20repair
+  useEffect(() => {
+    const service = new URLSearchParams(window.location.search).get("service");
+    if (service) {
+      setForm((p) => (p.message ? p : { ...p, message: `I'd like to enquire about: ${service.slice(0, 80)}.\n\nFacility location / details:\n` }));
+    }
+  }, []);
 
   const set = (k: keyof typeof form, v: string) => setForm((p) => ({ ...p, [k]: v }));
 
