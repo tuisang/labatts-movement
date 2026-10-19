@@ -3,6 +3,8 @@ import Link from "next/link";
 import TopNavBar from "@/components/activity-library/TopNavBar";
 import Footer from "@/components/activity-library/Footer";
 import ProjectGallery from "@/components/facility/ProjectGallery";
+import FacilityProjectsManager from "@/components/facility/FacilityProjectsManager";
+import { isCoach } from "@/lib/coachAuth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -42,11 +44,14 @@ const services = [
 
 export default async function FacilityPage() {
   // Tolerate the table not existing yet (before `prisma db push`) or a sleeping database.
+  const admin = await isCoach().catch(() => false);
+  let tableOk = true;
   let projects: Awaited<ReturnType<typeof prisma.facilityProject.findMany>> = [];
   try {
     projects = await prisma.facilityProject.findMany({ orderBy: { createdAt: "desc" } });
   } catch {
     projects = [];
+    tableOk = false;
   }
 
   return (
@@ -87,11 +92,32 @@ export default async function FacilityPage() {
           ))}
         </div>
 
-        {projects.length > 0 && (
+        {(projects.length > 0 || admin) && (
           <section className="mb-12">
-            <h2 className="font-headline-lg-mobile md:font-headline-md text-headline-md mb-1">Projects we&apos;ve done</h2>
-            <p className="text-on-surface-variant text-sm mb-6">A look at facilities we&apos;ve built, repaired, maintained and prepared.</p>
-            <ProjectGallery projects={projects} />
+            <h2 className="font-headline-md text-headline-md mb-1">Projects we&apos;ve done</h2>
+            <p className="text-on-surface-variant text-sm mb-6">
+              A look at facilities we&apos;ve built, repaired, maintained and prepared.
+            </p>
+            {projects.length > 0 ? (
+              <ProjectGallery projects={projects} />
+            ) : (
+              <p className="text-sm text-on-surface-variant">No projects added yet.</p>
+            )}
+          </section>
+        )}
+
+        {admin && (
+          <section className="mb-12 border-2 border-dashed border-primary/40 rounded-2xl p-6">
+            <h2 className="font-headline-md text-headline-md mb-1">Add a project (admin only)</h2>
+            <p className="text-on-surface-variant text-sm mb-5">Only you can see this section. Visitors just see the gallery above.</p>
+            {tableOk ? (
+              <FacilityProjectsManager projects={projects} />
+            ) : (
+              <p className="text-sm text-error">
+                The gallery isn&apos;t set up in the database yet. In the frontend folder run <code>npx prisma db push</code>{" "}
+                then <code>npx prisma generate</code>, and restart the dev server.
+              </p>
+            )}
           </section>
         )}
 
