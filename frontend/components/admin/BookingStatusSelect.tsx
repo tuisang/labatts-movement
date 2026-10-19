@@ -3,16 +3,27 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const STATUSES = ["pending", "confirmed", "completed", "cancelled"] as const;
+const DEFAULT_STATUSES = ["pending", "confirmed", "completed", "cancelled"];
 
 const STATUS_STYLES: Record<string, string> = {
   pending: "text-[#994700] border-[#994700]",
   confirmed: "text-green-600 border-green-600",
   completed: "text-blue-600 border-blue-600",
   cancelled: "text-red-600 border-red-600",
+  returned: "text-blue-600 border-blue-600",
 };
 
-export default function BookingStatusSelect({ id, status }: { id: string; status: string }) {
+export default function BookingStatusSelect({
+  id,
+  status,
+  endpoint = "/api/admin/bookings",
+  statuses = DEFAULT_STATUSES,
+}: {
+  id: string;
+  status: string;
+  endpoint?: string;
+  statuses?: string[];
+}) {
   const router = useRouter();
   const [value, setValue] = useState(status);
   const [saving, setSaving] = useState(false);
@@ -22,7 +33,7 @@ export default function BookingStatusSelect({ id, status }: { id: string; status
     setValue(next);
     setSaving(true);
     try {
-      const res = await fetch("/api/admin/bookings", {
+      const res = await fetch(endpoint, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status: next }),
@@ -46,7 +57,7 @@ export default function BookingStatusSelect({ id, status }: { id: string; status
         STATUS_STYLES[value] ?? "text-on-surface border-outline-variant"
       }`}
     >
-      {STATUSES.map((s) => (
+      {statuses.map((s) => (
         <option key={s} value={s}>
           {s}
         </option>
